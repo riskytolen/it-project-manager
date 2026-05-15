@@ -17,7 +17,7 @@ export function Topbar({ onMenuClick }: TopbarProps) {
       <button
         onClick={onMenuClick}
         className="rounded-md p-2 text-muted-foreground hover:bg-accent hover:text-foreground lg:hidden"
-        aria-label="Toggle menu"
+        aria-label="Buka menu"
       >
         <Menu className="h-5 w-5" />
       </button>
@@ -37,7 +37,7 @@ export function Topbar({ onMenuClick }: TopbarProps) {
         <input
           name="q"
           type="search"
-          placeholder="Search projects, tasks, notes..."
+          placeholder="Cari proyek, tugas, catatan..."
           className="h-9 w-full rounded-md border border-input bg-card pl-9 pr-3 text-sm shadow-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:border-transparent sm:max-w-md"
         />
       </form>
@@ -49,7 +49,7 @@ export function Topbar({ onMenuClick }: TopbarProps) {
         className="hidden sm:inline-flex h-9 items-center gap-2 rounded-md bg-primary px-3.5 text-sm font-medium text-primary-foreground shadow-sm transition-all hover:bg-primary/90 active:scale-[0.98]"
       >
         <Plus className="h-4 w-4" />
-        New Project
+        Proyek Baru
       </Link>
     </header>
   );

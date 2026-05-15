@@ -64,10 +64,9 @@ export default async function ProjectsPage({
     <div className="space-y-6 animate-fade-in">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-2xl font-bold">Projects</h1>
+          <h1 className="text-2xl font-bold">Proyek</h1>
           <p className="text-sm text-muted-foreground">
-            {projects.length} {projects.length === 1 ? "project" : "projects"}{" "}
-            in your workspace
+            {projects.length} proyek di ruang kerja kamu
           </p>
         </div>
         <Link
@@ -75,7 +74,7 @@ export default async function ProjectsPage({
           className="inline-flex h-9 items-center gap-2 self-start rounded-md bg-primary px-4 text-sm font-medium text-primary-foreground shadow-sm hover:bg-primary/90"
         >
           <Plus className="h-4 w-4" />
-          New Project
+          Proyek Baru
         </Link>
       </div>
 
@@ -89,7 +88,7 @@ export default async function ProjectsPage({
                 type="search"
                 name="q"
                 defaultValue={params.q}
-                placeholder="Search by name or description..."
+                placeholder="Cari berdasarkan nama atau deskripsi..."
                 className="h-9 w-full rounded-md border border-input bg-background pl-9 pr-3 text-sm shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
               />
             </div>
@@ -98,37 +97,37 @@ export default async function ProjectsPage({
               defaultValue={params.status ?? "all"}
               className="h-9 rounded-md border border-input bg-background px-3 text-sm shadow-sm"
             >
-              <option value="all">All Status</option>
-              <option value="planning">Planning</option>
-              <option value="ongoing">Ongoing</option>
-              <option value="pending">Pending</option>
-              <option value="completed">Completed</option>
-              <option value="cancelled">Cancelled</option>
+              <option value="all">Semua Status</option>
+              <option value="planning">Perencanaan</option>
+              <option value="ongoing">Berjalan</option>
+              <option value="pending">Tertunda</option>
+              <option value="completed">Selesai</option>
+              <option value="cancelled">Dibatalkan</option>
             </select>
             <select
               name="priority"
               defaultValue={params.priority ?? "all"}
               className="h-9 rounded-md border border-input bg-background px-3 text-sm shadow-sm"
             >
-              <option value="all">All Priority</option>
-              <option value="low">Low</option>
-              <option value="medium">Medium</option>
-              <option value="high">High</option>
-              <option value="urgent">Urgent</option>
+              <option value="all">Semua Prioritas</option>
+              <option value="low">Rendah</option>
+              <option value="medium">Sedang</option>
+              <option value="high">Tinggi</option>
+              <option value="urgent">Mendesak</option>
             </select>
             <select
               name="category"
               defaultValue={params.category ?? "all"}
               className="h-9 rounded-md border border-input bg-background px-3 text-sm shadow-sm"
             >
-              <option value="all">All Category</option>
+              <option value="all">Semua Kategori</option>
               <option value="website">Website</option>
-              <option value="application">Application</option>
-              <option value="maintenance">Maintenance</option>
-              <option value="support">Support</option>
-              <option value="infrastructure">Infrastructure</option>
-              <option value="database">Database</option>
-              <option value="other">Other</option>
+              <option value="application">Aplikasi</option>
+              <option value="maintenance">Pemeliharaan</option>
+              <option value="support">Dukungan</option>
+              <option value="infrastructure">Infrastruktur</option>
+              <option value="database">Basis Data</option>
+              <option value="other">Lainnya</option>
             </select>
             <div className="flex gap-2 lg:col-span-5">
               <button
@@ -136,7 +135,7 @@ export default async function ProjectsPage({
                 className="inline-flex h-9 items-center gap-2 rounded-md bg-primary px-4 text-xs font-medium text-primary-foreground hover:bg-primary/90"
               >
                 <Filter className="h-3.5 w-3.5" />
-                Apply
+                Terapkan
               </button>
               <Link
                 href="/projects"
@@ -152,11 +151,11 @@ export default async function ProjectsPage({
       {projects.length === 0 ? (
         <EmptyState
           icon={FolderKanban}
-          title="No projects found"
+          title="Tidak ada proyek ditemukan"
           description={
             params.q || params.status || params.priority || params.category
-              ? "Try adjusting your filters or create a new project."
-              : "Create your first project to start tracking tasks."
+              ? "Coba sesuaikan filter atau buat proyek baru."
+              : "Buat proyek pertama untuk mulai melacak tugas."
           }
           action={
             <Link
@@ -164,7 +163,7 @@ export default async function ProjectsPage({
               className="inline-flex h-9 items-center gap-2 rounded-md bg-primary px-4 text-sm font-medium text-primary-foreground hover:bg-primary/90"
             >
               <Plus className="h-4 w-4" />
-              Create Project
+              Buat Proyek
             </Link>
           }
         />
@@ -195,7 +194,7 @@ export default async function ProjectsPage({
                 <div className="mt-4">
                   <Progress value={p.progress} size="sm" />
                   <div className="mt-1.5 flex items-center justify-between text-xs">
-                    <span className="text-muted-foreground">Progress</span>
+                    <span className="text-muted-foreground">Progres</span>
                     <span className="font-medium tabular-nums">
                       {p.progress}%
                     </span>
@@ -213,7 +212,7 @@ export default async function ProjectsPage({
                       }`}
                     >
                       <CalendarDays className="h-3 w-3" />
-                      {formatDate(p.deadline, "MMM d")}
+                      {formatDate(p.deadline, "d MMM")}
                     </span>
                   )}
                 </div>

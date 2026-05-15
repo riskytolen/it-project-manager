@@ -49,16 +49,16 @@ export default async function FilesPage() {
   return (
     <div className="space-y-6 animate-fade-in">
       <div>
-        <h1 className="text-2xl font-bold">Files</h1>
+        <h1 className="text-2xl font-bold">Berkas</h1>
         <p className="text-sm text-muted-foreground">
-          All attachments across your projects and tasks
+          Semua lampiran di seluruh proyek dan tugas
         </p>
       </div>
 
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
         <div className="rounded-xl border border-border bg-card p-4">
           <p className="text-xs uppercase tracking-wide text-muted-foreground">
-            Total Files
+            Total Berkas
           </p>
           <p className="mt-1 text-2xl font-semibold tabular-nums">
             {all.length}
@@ -66,7 +66,7 @@ export default async function FilesPage() {
         </div>
         <div className="rounded-xl border border-border bg-card p-4">
           <p className="text-xs uppercase tracking-wide text-muted-foreground">
-            Storage Used
+            Penyimpanan Terpakai
           </p>
           <p className="mt-1 text-2xl font-semibold tabular-nums">
             {formatBytes(totalSize)}
@@ -74,7 +74,7 @@ export default async function FilesPage() {
         </div>
         <div className="rounded-xl border border-border bg-card p-4">
           <p className="text-xs uppercase tracking-wide text-muted-foreground">
-            Images
+            Gambar
           </p>
           <p className="mt-1 text-2xl font-semibold tabular-nums">
             {byType.image.length}
@@ -82,7 +82,7 @@ export default async function FilesPage() {
         </div>
         <div className="rounded-xl border border-border bg-card p-4">
           <p className="text-xs uppercase tracking-wide text-muted-foreground">
-            Documents
+            Dokumen
           </p>
           <p className="mt-1 text-2xl font-semibold tabular-nums">
             {byType.document.length}
@@ -94,27 +94,27 @@ export default async function FilesPage() {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Files className="h-5 w-5 text-primary" />
-            All Files
+            Semua Berkas
           </CardTitle>
           <CardDescription>
-            Upload files to attach them to projects from the project detail page
+            Unggah berkas untuk dilampirkan ke proyek dari halaman detail proyek
           </CardDescription>
         </CardHeader>
         <CardContent>
           {all.length === 0 ? (
             <EmptyState
               icon={FolderOpen}
-              title="No files uploaded yet"
-              description="Files uploaded to projects will appear here. You can also upload directly below."
+              title="Belum ada berkas yang diunggah"
+              description="Berkas yang diunggah ke proyek akan muncul di sini. Kamu juga bisa unggah langsung di bawah."
             />
           ) : null}
           <ProjectAttachments files={all} showProject />
 
           {allProjects.length > 0 && all.length > 0 && (
             <div className="mt-4 rounded-md border border-dashed border-border bg-muted/30 p-3 text-xs text-muted-foreground">
-              Tip: Use the upload button above to add a file to your global
-              storage. To link a file to a specific project, upload from that
-              project&apos;s detail page.
+              Tip: Gunakan tombol unggah di atas untuk menambah berkas ke
+              penyimpanan global. Untuk menautkan berkas ke proyek tertentu,
+              unggah dari halaman detail proyek tersebut.
             </div>
           )}
         </CardContent>

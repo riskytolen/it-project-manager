@@ -36,13 +36,13 @@ export default async function EditProjectPage({
         className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground"
       >
         <ArrowLeft className="h-4 w-4" />
-        Back to project
+        Kembali ke proyek
       </Link>
 
       <Card>
         <CardHeader>
-          <CardTitle>Edit Project</CardTitle>
-          <CardDescription>Update project details and settings.</CardDescription>
+          <CardTitle>Edit Proyek</CardTitle>
+          <CardDescription>Perbarui detail dan pengaturan proyek.</CardDescription>
         </CardHeader>
         <CardContent>
           <ProjectForm project={project as Project} />

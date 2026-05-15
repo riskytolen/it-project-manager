@@ -58,7 +58,7 @@ async function logActivity(
 export async function createTask(formData: FormData) {
   const parsed = taskSchema.safeParse(fd(formData));
   if (!parsed.success) {
-    return { error: parsed.error.issues[0]?.message ?? "Invalid task input" };
+    return { error: parsed.error.issues[0]?.message ?? "Input tugas tidak valid" };
   }
 
   const supabase = await createClient();
@@ -82,7 +82,7 @@ export async function createTask(formData: FormData) {
     "task",
     data.id,
     "created",
-    `Task "${data.title}" was created`,
+    `Tugas "${data.title}" dibuat`,
   );
 
   revalidatePath(`/projects/${data.project_id}`);
@@ -94,7 +94,7 @@ export async function createTask(formData: FormData) {
 export async function updateTask(id: string, formData: FormData) {
   const parsed = taskSchema.safeParse(fd(formData));
   if (!parsed.success) {
-    return { error: parsed.error.issues[0]?.message ?? "Invalid task input" };
+    return { error: parsed.error.issues[0]?.message ?? "Input tugas tidak valid" };
   }
 
   const supabase = await createClient();
@@ -105,7 +105,7 @@ export async function updateTask(id: string, formData: FormData) {
     "task",
     id,
     "updated",
-    `Task "${parsed.data.title}" was updated`,
+    `Tugas "${parsed.data.title}" diperbarui`,
   );
 
   revalidatePath(`/projects/${parsed.data.project_id}`);
@@ -119,7 +119,7 @@ export async function deleteTask(id: string, projectId: string) {
   const { error } = await supabase.from("tasks").delete().eq("id", id);
   if (error) return { error: error.message };
 
-  await logActivity("task", id, "deleted", "Task was deleted");
+  await logActivity("task", id, "deleted", "Tugas dihapus");
 
   revalidatePath(`/projects/${projectId}`);
   revalidatePath("/board");
@@ -142,11 +142,19 @@ export async function updateTaskStatus(id: string, status: string) {
 
   if (error) return { error: error.message };
 
+  const statusLabelMap: Record<string, string> = {
+    todo: "Belum Dikerjakan",
+    in_progress: "Dikerjakan",
+    testing: "Pengujian",
+    revision: "Revisi",
+    done: "Selesai",
+  };
+
   await logActivity(
     "task",
     id,
     "status_changed",
-    `Task "${data.title}" moved to ${safeStatus.replace("_", " ")}`,
+    `Tugas "${data.title}" dipindah ke ${statusLabelMap[safeStatus] ?? safeStatus}`,
   );
 
   revalidatePath(`/projects/${data.project_id}`);
@@ -157,7 +165,7 @@ export async function updateTaskStatus(id: string, status: string) {
 
 // ============= CHECKLIST =============
 export async function addChecklistItem(taskId: string, content: string) {
-  if (!content.trim()) return { error: "Content required" };
+  if (!content.trim()) return { error: "Konten wajib diisi" };
   const supabase = await createClient();
 
   const { count } = await supabase

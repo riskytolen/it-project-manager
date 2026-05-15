@@ -39,9 +39,9 @@ export function TaskList({ projectId, tasks }: Props) {
     return (
       <div className="rounded-lg border border-dashed border-border bg-card/50 p-8 text-center">
         <ListChecks className="mx-auto mb-2 h-8 w-8 text-muted-foreground" />
-        <p className="text-sm font-medium">No tasks yet</p>
+        <p className="text-sm font-medium">Belum ada tugas</p>
         <p className="text-xs text-muted-foreground">
-          Add your first task to start tracking work.
+          Tambahkan tugas pertama untuk mulai melacak pekerjaan.
         </p>
       </div>
     );
@@ -65,7 +65,7 @@ export function TaskList({ projectId, tasks }: Props) {
                     setExpandedId(isExpanded ? null : task.id)
                   }
                   className="rounded-md p-1 text-muted-foreground hover:bg-accent hover:text-foreground"
-                  aria-label={isExpanded ? "Collapse" : "Expand"}
+                  aria-label={isExpanded ? "Tutup" : "Buka"}
                 >
                   {isExpanded ? (
                     <ChevronDown className="h-4 w-4" />
@@ -86,7 +86,7 @@ export function TaskList({ projectId, tasks }: Props) {
                         )}
                       >
                         <CalendarDays className="h-3 w-3" />
-                        {formatDate(task.deadline, "MMM d, yyyy")}
+                        {formatDate(task.deadline, "d MMM yyyy")}
                       </span>
                     )}
                     {items.length > 0 && (
@@ -100,7 +100,7 @@ export function TaskList({ projectId, tasks }: Props) {
                 <button
                   onClick={() => setEditing(task)}
                   className="rounded-md p-1.5 text-muted-foreground hover:bg-accent hover:text-foreground"
-                  aria-label="Edit task"
+                  aria-label="Edit tugas"
                 >
                   <Pencil className="h-3.5 w-3.5" />
                 </button>
@@ -116,7 +116,7 @@ export function TaskList({ projectId, tasks }: Props) {
                   {task.notes && (
                     <div className="rounded-md border border-border bg-card p-3 text-xs">
                       <p className="font-medium text-muted-foreground mb-1 uppercase tracking-wide">
-                        Notes
+                        Catatan
                       </p>
                       <p className="whitespace-pre-wrap">{task.notes}</p>
                     </div>
@@ -124,7 +124,7 @@ export function TaskList({ projectId, tasks }: Props) {
                   <div className="flex items-center justify-between text-[11px] text-muted-foreground">
                     <span className="inline-flex items-center gap-1">
                       <Clock className="h-3 w-3" />
-                      Updated {formatDate(task.updated_at, "MMM d, HH:mm")}
+                      Diperbarui {formatDate(task.updated_at, "d MMM, HH:mm")}
                     </span>
                   </div>
                   <Checklist taskId={task.id} items={items} />

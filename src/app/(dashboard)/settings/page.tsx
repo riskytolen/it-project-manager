@@ -35,9 +35,9 @@ export default async function SettingsPage() {
   return (
     <div className="mx-auto max-w-3xl space-y-6 animate-fade-in">
       <div>
-        <h1 className="text-2xl font-bold">Settings</h1>
+        <h1 className="text-2xl font-bold">Pengaturan</h1>
         <p className="text-sm text-muted-foreground">
-          Personalize your workspace
+          Personalisasi ruang kerja kamu
         </p>
       </div>
 
@@ -45,9 +45,9 @@ export default async function SettingsPage() {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <SettingsIcon className="h-5 w-5 text-primary" />
-            Preferences
+            Preferensi
           </CardTitle>
-          <CardDescription>Display name and personal goals</CardDescription>
+          <CardDescription>Nama tampilan dan target pribadi</CardDescription>
         </CardHeader>
         <CardContent>
           <SettingsForm settings={(data ?? null) as AppSettings | null} />
@@ -58,30 +58,30 @@ export default async function SettingsPage() {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Database className="h-5 w-5 text-primary" />
-            Workspace Stats
+            Statistik Ruang Kerja
           </CardTitle>
-          <CardDescription>Quick overview of your workspace data</CardDescription>
+          <CardDescription>Ringkasan singkat data ruang kerja kamu</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-            <Stat label="Projects" value={projectCount ?? 0} />
-            <Stat label="Tasks" value={taskCount ?? 0} />
-            <Stat label="Notes" value={noteCount ?? 0} />
-            <Stat label="Files" value={fileCount ?? 0} />
+            <Stat label="Proyek" value={projectCount ?? 0} />
+            <Stat label="Tugas" value={taskCount ?? 0} />
+            <Stat label="Catatan" value={noteCount ?? 0} />
+            <Stat label="Berkas" value={fileCount ?? 0} />
           </div>
         </CardContent>
       </Card>
 
       <Card>
         <CardHeader>
-          <CardTitle>About</CardTitle>
-          <CardDescription>App information</CardDescription>
+          <CardTitle>Tentang</CardTitle>
+          <CardDescription>Informasi aplikasi</CardDescription>
         </CardHeader>
         <CardContent className="space-y-3 text-sm">
-          <Row label="Version" value="1.0.0" />
+          <Row label="Versi" value="1.0.0" />
           <Row label="Stack" value="Next.js · TypeScript · Tailwind · Supabase" />
           <Row
-            label="Storage"
+            label="Penyimpanan"
             value={
               <a
                 href="https://supabase.com/dashboard"
@@ -89,7 +89,7 @@ export default async function SettingsPage() {
                 rel="noreferrer"
                 className="inline-flex items-center gap-1 text-primary hover:underline"
               >
-                Supabase dashboard
+                Dasbor Supabase
                 <ExternalLink className="h-3 w-3" />
               </a>
             }

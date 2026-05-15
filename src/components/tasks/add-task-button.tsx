@@ -11,7 +11,7 @@ export function AddTaskButton({ projectId }: { projectId: string }) {
     <>
       <Button size="sm" onClick={() => setOpen(true)}>
         <Plus className="h-4 w-4" />
-        Add Task
+        Tambah Tugas
       </Button>
       <TaskModal
         open={open}

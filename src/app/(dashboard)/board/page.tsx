@@ -40,9 +40,9 @@ export default async function BoardPage({
     <div className="space-y-6 animate-fade-in">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-2xl font-bold">Task Board</h1>
+          <h1 className="text-2xl font-bold">Papan Tugas</h1>
           <p className="text-sm text-muted-foreground">
-            Drag and drop tasks across columns to update their status
+            Seret dan letakkan tugas antar kolom untuk memperbarui status
           </p>
         </div>
         <form className="flex items-center gap-2">
@@ -51,7 +51,7 @@ export default async function BoardPage({
             defaultValue={params.project ?? "all"}
             className="h-9 rounded-md border border-input bg-card px-3 text-sm shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
           >
-            <option value="all">All Projects</option>
+            <option value="all">Semua Proyek</option>
             {allProjects.map((p) => (
               <option key={p.id} value={p.id}>
                 {p.name}
@@ -70,15 +70,15 @@ export default async function BoardPage({
       {allProjects.length === 0 ? (
         <EmptyState
           icon={KanbanSquare}
-          title="No projects yet"
-          description="Create a project first to start managing tasks on the board."
+          title="Belum ada proyek"
+          description="Buat proyek terlebih dahulu untuk mulai mengelola tugas di papan."
           action={
             <Link
               href="/projects/new"
               className="inline-flex h-9 items-center gap-2 rounded-md bg-primary px-4 text-sm font-medium text-primary-foreground hover:bg-primary/90"
             >
               <Plus className="h-4 w-4" />
-              Create Project
+              Buat Proyek
             </Link>
           }
         />

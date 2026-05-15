@@ -153,7 +153,7 @@ export function KanbanBoard({
                           setCreating({ projectId: defaultProjectIdForCreate })
                         }
                         className="rounded-md p-1 text-muted-foreground hover:bg-accent hover:text-foreground"
-                        aria-label="Add task"
+                        aria-label="Tambah tugas"
                       >
                         <Plus className="h-3.5 w-3.5" />
                       </button>
@@ -163,7 +163,7 @@ export function KanbanBoard({
                   <div className="flex-1 space-y-2 min-h-[80px]">
                     {grouped[status].length === 0 && (
                       <p className="rounded-md border border-dashed border-border bg-card/50 py-4 text-center text-[11px] text-muted-foreground">
-                        Drop tasks here
+                        Letakkan tugas di sini
                       </p>
                     )}
                     {grouped[status].map((task, index) => {
@@ -211,7 +211,7 @@ export function KanbanBoard({
                                         )}
                                       >
                                         <CalendarDays className="h-2.5 w-2.5" />
-                                        {formatDate(task.deadline, "MMM d")}
+                                        {formatDate(task.deadline, "d MMM")}
                                       </span>
                                     )}
                                   </div>

@@ -14,7 +14,7 @@ export function DeleteProjectButton({ id, name }: { id: string; name: string }) 
   const handleDelete = () => {
     if (
       !confirm(
-        `Delete project "${name}"? This will permanently remove all its tasks and files.`,
+        `Hapus proyek "${name}"? Semua tugas dan berkas terkait akan dihapus permanen.`,
       )
     ) {
       return;
@@ -24,7 +24,7 @@ export function DeleteProjectButton({ id, name }: { id: string; name: string }) 
       if (res && "error" in res && res.error) {
         toast.error(res.error);
       } else {
-        toast.success("Project deleted");
+        toast.success("Proyek dihapus");
         router.push("/projects");
         router.refresh();
       }
@@ -40,7 +40,7 @@ export function DeleteProjectButton({ id, name }: { id: string; name: string }) 
       loading={isPending}
     >
       <Trash2 className="h-4 w-4" />
-      Delete
+      Hapus
     </Button>
   );
 }

@@ -11,10 +11,10 @@ export async function uploadFile(formData: FormData) {
   const taskId = formData.get("task_id")?.toString() || null;
 
   if (!file || file.size === 0) {
-    return { error: "No file selected" };
+    return { error: "Tidak ada berkas yang dipilih" };
   }
   if (file.size > 10 * 1024 * 1024) {
-    return { error: "File exceeds 10MB limit" };
+    return { error: "Ukuran berkas melebihi batas 10MB" };
   }
 
   const supabase = await createClient();

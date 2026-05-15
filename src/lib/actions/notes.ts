@@ -40,7 +40,7 @@ function fd(formData: FormData) {
 export async function createNote(formData: FormData) {
   const parsed = noteSchema.safeParse(fd(formData));
   if (!parsed.success) {
-    return { error: parsed.error.issues[0]?.message ?? "Invalid note" };
+    return { error: parsed.error.issues[0]?.message ?? "Catatan tidak valid" };
   }
   const supabase = await createClient();
   const { error } = await supabase.from("notes").insert(parsed.data);
@@ -52,7 +52,7 @@ export async function createNote(formData: FormData) {
 export async function updateNote(id: string, formData: FormData) {
   const parsed = noteSchema.safeParse(fd(formData));
   if (!parsed.success) {
-    return { error: parsed.error.issues[0]?.message ?? "Invalid note" };
+    return { error: parsed.error.issues[0]?.message ?? "Catatan tidak valid" };
   }
   const supabase = await createClient();
   const { error } = await supabase.from("notes").update(parsed.data).eq("id", id);

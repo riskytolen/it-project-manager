@@ -35,7 +35,7 @@ export function TaskModal({ open, onClose, projectId, task }: TaskModalProps) {
         setError(res.error);
         toast.error(res.error);
       } else {
-        toast.success(task ? "Task updated" : "Task created");
+        toast.success(task ? "Tugas diperbarui" : "Tugas dibuat");
         onClose();
       }
     });
@@ -43,12 +43,12 @@ export function TaskModal({ open, onClose, projectId, task }: TaskModalProps) {
 
   function handleDelete() {
     if (!task) return;
-    if (!confirm(`Delete task "${task.title}"?`)) return;
+    if (!confirm(`Hapus tugas "${task.title}"?`)) return;
     startTransition(async () => {
       const res = await deleteTask(task.id, task.project_id);
       if (res?.error) toast.error(res.error);
       else {
-        toast.success("Task deleted");
+        toast.success("Tugas dihapus");
         onClose();
       }
     });
@@ -58,34 +58,34 @@ export function TaskModal({ open, onClose, projectId, task }: TaskModalProps) {
     <Modal
       open={open}
       onClose={onClose}
-      title={task ? "Edit Task" : "Create Task"}
+      title={task ? "Edit Tugas" : "Buat Tugas"}
       description={
         task
-          ? "Update task details, status, or deadline."
-          : "Define a new task for this project."
+          ? "Perbarui detail, status, atau tenggat tugas."
+          : "Definisikan tugas baru untuk proyek ini."
       }
       size="lg"
     >
       <form action={handleSubmit} className="space-y-4 p-6">
         <div className="space-y-1.5">
-          <Label htmlFor="title">Title</Label>
+          <Label htmlFor="title">Judul</Label>
           <Input
             id="title"
             name="title"
             required
             defaultValue={task?.title}
-            placeholder="e.g. Implement authentication flow"
+            placeholder="mis. Implementasi alur autentikasi"
           />
         </div>
 
         <div className="space-y-1.5">
-          <Label htmlFor="description">Description</Label>
+          <Label htmlFor="description">Deskripsi</Label>
           <Textarea
             id="description"
             name="description"
             rows={3}
             defaultValue={task?.description ?? ""}
-            placeholder="Details, acceptance criteria, references..."
+            placeholder="Detail, kriteria penerimaan, referensi..."
           />
         </div>
 
@@ -97,30 +97,30 @@ export function TaskModal({ open, onClose, projectId, task }: TaskModalProps) {
               name="status"
               defaultValue={task?.status ?? "todo"}
             >
-              <option value="todo">Todo</option>
-              <option value="in_progress">In Progress</option>
-              <option value="testing">Testing</option>
-              <option value="revision">Revision</option>
-              <option value="done">Done</option>
+              <option value="todo">Belum Dikerjakan</option>
+              <option value="in_progress">Dikerjakan</option>
+              <option value="testing">Pengujian</option>
+              <option value="revision">Revisi</option>
+              <option value="done">Selesai</option>
             </Select>
           </div>
 
           <div className="space-y-1.5">
-            <Label htmlFor="priority">Priority</Label>
+            <Label htmlFor="priority">Prioritas</Label>
             <Select
               id="priority"
               name="priority"
               defaultValue={task?.priority ?? "medium"}
             >
-              <option value="low">Low</option>
-              <option value="medium">Medium</option>
-              <option value="high">High</option>
-              <option value="urgent">Urgent</option>
+              <option value="low">Rendah</option>
+              <option value="medium">Sedang</option>
+              <option value="high">Tinggi</option>
+              <option value="urgent">Mendesak</option>
             </Select>
           </div>
 
           <div className="space-y-1.5 sm:col-span-2">
-            <Label htmlFor="deadline">Deadline</Label>
+            <Label htmlFor="deadline">Tenggat</Label>
             <Input
               id="deadline"
               name="deadline"
@@ -131,13 +131,13 @@ export function TaskModal({ open, onClose, projectId, task }: TaskModalProps) {
         </div>
 
         <div className="space-y-1.5">
-          <Label htmlFor="notes">Notes</Label>
+          <Label htmlFor="notes">Catatan</Label>
           <Textarea
             id="notes"
             name="notes"
             rows={2}
             defaultValue={task?.notes ?? ""}
-            placeholder="Optional implementation notes..."
+            placeholder="Catatan implementasi opsional..."
           />
         </div>
 
@@ -157,7 +157,7 @@ export function TaskModal({ open, onClose, projectId, task }: TaskModalProps) {
               disabled={isPending}
             >
               <Trash2 className="h-4 w-4" />
-              Delete
+              Hapus
             </Button>
           ) : (
             <span />
@@ -169,11 +169,11 @@ export function TaskModal({ open, onClose, projectId, task }: TaskModalProps) {
               onClick={onClose}
               disabled={isPending}
             >
-              Cancel
+              Batal
             </Button>
             <Button type="submit" loading={isPending}>
               <Save className="h-4 w-4" />
-              {task ? "Save" : "Create"}
+              {task ? "Simpan" : "Buat"}
             </Button>
           </div>
         </div>

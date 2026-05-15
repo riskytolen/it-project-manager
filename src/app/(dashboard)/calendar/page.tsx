@@ -103,17 +103,17 @@ export default async function CalendarPage({
   return (
     <div className="space-y-6 animate-fade-in">
       <div>
-        <h1 className="text-2xl font-bold">Calendar</h1>
+        <h1 className="text-2xl font-bold">Kalender</h1>
         <p className="text-sm text-muted-foreground">
-          View deadlines and milestones across all projects
+          Lihat tenggat dan tonggak penting di semua proyek
         </p>
       </div>
 
       {events.length === 0 ? (
         <EmptyState
           icon={CalendarDays}
-          title="No deadlines yet"
-          description="Add deadlines to projects or tasks to see them on the calendar."
+          title="Belum ada tenggat"
+          description="Tambahkan tenggat ke proyek atau tugas untuk melihatnya di kalender."
         />
       ) : (
         <div className="grid gap-4 lg:grid-cols-3">
@@ -124,16 +124,15 @@ export default async function CalendarPage({
           <div className="space-y-4">
             <Card>
               <CardHeader>
-                <CardTitle className="text-base">Overdue</CardTitle>
+                <CardTitle className="text-base">Terlambat</CardTitle>
                 <CardDescription>
-                  {overdueTasks.length}{" "}
-                  {overdueTasks.length === 1 ? "task" : "tasks"} past deadline
+                  {overdueTasks.length} tugas lewat tenggat
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-2">
                 {overdueTasks.length === 0 ? (
                   <p className="py-4 text-center text-xs text-muted-foreground">
-                    Nothing overdue
+                    Tidak ada yang terlambat
                   </p>
                 ) : (
                   overdueTasks.slice(0, 5).map((t) => (
@@ -146,7 +145,7 @@ export default async function CalendarPage({
                         {t.title}
                       </p>
                       <p className="text-[11px] text-red-600/80 dark:text-red-400/80">
-                        Due {formatDate(t.deadline, "MMM d")} ·{" "}
+                        Tenggat {formatDate(t.deadline, "d MMM")} ·{" "}
                         {formatDateRelative(t.deadline)}
                       </p>
                     </Link>
@@ -157,13 +156,13 @@ export default async function CalendarPage({
 
             <Card>
               <CardHeader>
-                <CardTitle className="text-base">Upcoming</CardTitle>
-                <CardDescription>Next deadlines coming up</CardDescription>
+                <CardTitle className="text-base">Akan Datang</CardTitle>
+                <CardDescription>Tenggat berikutnya</CardDescription>
               </CardHeader>
               <CardContent className="space-y-2">
                 {upcoming.length === 0 ? (
                   <p className="py-4 text-center text-xs text-muted-foreground">
-                    No upcoming deadlines
+                    Tidak ada tenggat mendatang
                   </p>
                 ) : (
                   upcoming.map((u) => (
@@ -175,7 +174,7 @@ export default async function CalendarPage({
                       <p className="text-xs font-medium">{u.title}</p>
                       <div className="mt-1 flex items-center justify-between">
                         <p className="text-[11px] text-muted-foreground">
-                          {formatDate(u.deadline, "MMM d")} ·{" "}
+                          {formatDate(u.deadline, "d MMM")} ·{" "}
                           {formatDateRelative(u.deadline)}
                         </p>
                         <PriorityBadge priority={u.priority} />
@@ -190,13 +189,13 @@ export default async function CalendarPage({
               <CardHeader>
                 <CardTitle className="flex items-center gap-2 text-base">
                   <FolderOpen className="h-4 w-4 text-primary" />
-                  Project Deadlines
+                  Tenggat Proyek
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-2">
                 {allProjects.length === 0 ? (
                   <p className="py-4 text-center text-xs text-muted-foreground">
-                    No project deadlines set
+                    Belum ada tenggat proyek
                   </p>
                 ) : (
                   allProjects.slice(0, 6).map((p) => (
@@ -207,7 +206,7 @@ export default async function CalendarPage({
                     >
                       <p className="truncate text-xs font-medium">{p.name}</p>
                       <p className="text-[11px] text-muted-foreground">
-                        Due {formatDate(p.deadline, "MMM d, yyyy")}
+                        Tenggat {formatDate(p.deadline, "d MMM yyyy")}
                       </p>
                     </Link>
                   ))

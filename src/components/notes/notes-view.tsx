@@ -83,11 +83,11 @@ export function NotesView({
   };
 
   const handleDelete = (note: Note) => {
-    if (!confirm(`Delete note "${note.title}"?`)) return;
+    if (!confirm(`Hapus catatan "${note.title}"?`)) return;
     startTransition(async () => {
       const res = await deleteNote(note.id);
       if (res.error) toast.error(res.error);
-      else toast.success("Note deleted");
+      else toast.success("Catatan dihapus");
     });
   };
 
@@ -95,14 +95,14 @@ export function NotesView({
     <div className="space-y-6 animate-fade-in">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-2xl font-bold">Notes</h1>
+          <h1 className="text-2xl font-bold">Catatan</h1>
           <p className="text-sm text-muted-foreground">
-            Bugs, ideas, documentation, and reminders in one place
+            Bug, ide, dokumentasi, dan pengingat di satu tempat
           </p>
         </div>
         <Button onClick={() => setEditing("new")}>
           <Plus className="h-4 w-4" />
-          New Note
+          Catatan Baru
         </Button>
       </div>
 
@@ -116,7 +116,7 @@ export function NotesView({
                 type="search"
                 name="q"
                 defaultValue={defaultQuery}
-                placeholder="Search notes..."
+                placeholder="Cari catatan..."
                 className="h-9 w-full rounded-md border border-input bg-background pl-9 pr-3 text-sm shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
               />
             </div>
@@ -125,17 +125,17 @@ export function NotesView({
               defaultValue={defaultCategory ?? "all"}
               className="h-9 rounded-md border border-input bg-background px-3 text-sm shadow-sm"
             >
-              <option value="all">All Categories</option>
+              <option value="all">Semua Kategori</option>
               <option value="bug">Bug</option>
-              <option value="feature_idea">Feature Idea</option>
-              <option value="documentation">Documentation</option>
-              <option value="maintenance">Maintenance</option>
-              <option value="reminder">Reminder</option>
-              <option value="general">General</option>
+              <option value="feature_idea">Ide Fitur</option>
+              <option value="documentation">Dokumentasi</option>
+              <option value="maintenance">Pemeliharaan</option>
+              <option value="reminder">Pengingat</option>
+              <option value="general">Umum</option>
             </select>
             <div className="flex gap-2 sm:col-span-3">
               <Button type="submit" size="sm">
-                Apply
+                Terapkan
               </Button>
               <Link
                 href="/notes"
@@ -151,12 +151,12 @@ export function NotesView({
       {notes.length === 0 ? (
         <EmptyState
           icon={NotebookPen}
-          title="No notes yet"
-          description="Capture bugs, ideas, documentation, and reminders to keep your work organized."
+          title="Belum ada catatan"
+          description="Catat bug, ide, dokumentasi, dan pengingat agar pekerjaan tetap rapi."
           action={
             <Button onClick={() => setEditing("new")}>
               <Plus className="h-4 w-4" />
-              Create First Note
+              Buat Catatan Pertama
             </Button>
           }
         />
@@ -189,7 +189,7 @@ export function NotesView({
                         onClick={() => handlePin(note)}
                         disabled={isPending}
                         className="rounded p-1 text-muted-foreground hover:bg-accent hover:text-foreground"
-                        aria-label={note.is_pinned ? "Unpin" : "Pin"}
+                        aria-label={note.is_pinned ? "Lepas pin" : "Pin"}
                       >
                         {note.is_pinned ? (
                           <PinOff className="h-3.5 w-3.5" />
@@ -207,7 +207,7 @@ export function NotesView({
                       <button
                         onClick={() => handleDelete(note)}
                         className="rounded p-1 text-muted-foreground hover:bg-destructive/10 hover:text-destructive"
-                        aria-label="Delete"
+                        aria-label="Hapus"
                       >
                         <Trash2 className="h-3.5 w-3.5" />
                       </button>
@@ -273,7 +273,7 @@ function NoteModal({ open, onClose, note, projects }: NoteModalProps) {
         : await createNote(formData);
       if (res?.error) toast.error(res.error);
       else {
-        toast.success(note ? "Note updated" : "Note created");
+        toast.success(note ? "Catatan diperbarui" : "Catatan dibuat");
         onClose();
       }
     });
@@ -283,45 +283,45 @@ function NoteModal({ open, onClose, note, projects }: NoteModalProps) {
     <Modal
       open={open}
       onClose={onClose}
-      title={note ? "Edit Note" : "Create Note"}
+      title={note ? "Edit Catatan" : "Buat Catatan"}
       size="lg"
     >
       <form action={handleSubmit} className="space-y-4 p-6">
         <div className="space-y-1.5">
-          <Label htmlFor="title">Title</Label>
+          <Label htmlFor="title">Judul</Label>
           <Input
             id="title"
             name="title"
             required
             defaultValue={note?.title}
-            placeholder="e.g. Fix login redirect on iOS Safari"
+            placeholder="mis. Perbaiki redirect login di iOS Safari"
           />
         </div>
 
         <div className="grid gap-4 sm:grid-cols-2">
           <div className="space-y-1.5">
-            <Label htmlFor="category">Category</Label>
+            <Label htmlFor="category">Kategori</Label>
             <Select
               id="category"
               name="category"
               defaultValue={note?.category ?? "general"}
             >
               <option value="bug">Bug</option>
-              <option value="feature_idea">Feature Idea</option>
-              <option value="documentation">Documentation</option>
-              <option value="maintenance">Maintenance</option>
-              <option value="reminder">Reminder</option>
-              <option value="general">General</option>
+              <option value="feature_idea">Ide Fitur</option>
+              <option value="documentation">Dokumentasi</option>
+              <option value="maintenance">Pemeliharaan</option>
+              <option value="reminder">Pengingat</option>
+              <option value="general">Umum</option>
             </Select>
           </div>
           <div className="space-y-1.5">
-            <Label htmlFor="project_id">Linked Project</Label>
+            <Label htmlFor="project_id">Proyek Terkait</Label>
             <Select
               id="project_id"
               name="project_id"
               defaultValue={note?.project_id ?? ""}
             >
-              <option value="">— None —</option>
+              <option value="">— Tidak ada —</option>
               {projects.map((p) => (
                 <option key={p.id} value={p.id}>
                   {p.name}
@@ -332,13 +332,13 @@ function NoteModal({ open, onClose, note, projects }: NoteModalProps) {
         </div>
 
         <div className="space-y-1.5">
-          <Label htmlFor="content">Content</Label>
+          <Label htmlFor="content">Isi</Label>
           <Textarea
             id="content"
             name="content"
             rows={8}
             defaultValue={note?.content ?? ""}
-            placeholder="Write your note... Markdown-style line breaks preserved."
+            placeholder="Tulis catatanmu... Baris baru ala Markdown tetap dipertahankan."
           />
         </div>
 
@@ -349,16 +349,16 @@ function NoteModal({ open, onClose, note, projects }: NoteModalProps) {
             defaultChecked={note?.is_pinned}
             className="h-4 w-4 rounded border-input text-primary focus:ring-ring"
           />
-          <span className="text-sm">Pin this note</span>
+          <span className="text-sm">Pin catatan ini</span>
         </label>
 
         <div className="flex items-center justify-end gap-2 border-t border-border pt-4">
           <Button type="button" variant="ghost" onClick={onClose}>
             <X className="h-4 w-4" />
-            Cancel
+            Batal
           </Button>
           <Button type="submit" loading={isPending}>
-            {note ? "Save" : "Create"}
+            {note ? "Simpan" : "Buat"}
           </Button>
         </div>
       </form>

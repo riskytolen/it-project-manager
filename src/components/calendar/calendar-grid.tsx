@@ -13,6 +13,7 @@ import {
   startOfWeek,
   subMonths,
 } from "date-fns";
+import { id as idLocale } from "date-fns/locale";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
@@ -35,7 +36,12 @@ interface Props {
   events: CalendarEvent[];
 }
 
-const WEEKDAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+const WEEKDAYS = ["Sen", "Sel", "Rab", "Kam", "Jum", "Sab", "Min"];
+
+const TYPE_LABEL: Record<"task" | "project", string> = {
+  task: "Tugas",
+  project: "Proyek",
+};
 
 const PRIORITY_COLOR: Record<Priority, string> = {
   low: "bg-slate-400",
@@ -82,12 +88,12 @@ export function CalendarGrid({ year, month, events: initialEvents }: Props) {
     <div className="rounded-xl border border-border bg-card">
       {/* Header */}
       <div className="flex items-center justify-between border-b border-border p-4">
-        <h2 className="text-lg font-semibold">{format(current, "MMMM yyyy")}</h2>
+        <h2 className="text-lg font-semibold">{format(current, "MMMM yyyy", { locale: idLocale })}</h2>
         <div className="flex items-center gap-1">
           <button
             onClick={() => setCurrent(subMonths(current, 1))}
             className="rounded-md p-1.5 text-muted-foreground hover:bg-accent hover:text-foreground"
-            aria-label="Previous month"
+            aria-label="Bulan sebelumnya"
           >
             <ChevronLeft className="h-4 w-4" />
           </button>
@@ -98,12 +104,12 @@ export function CalendarGrid({ year, month, events: initialEvents }: Props) {
             }}
             className="rounded-md border border-border bg-card px-2.5 py-1 text-xs font-medium hover:bg-accent"
           >
-            Today
+            Hari ini
           </button>
           <button
             onClick={() => setCurrent(addMonths(current, 1))}
             className="rounded-md p-1.5 text-muted-foreground hover:bg-accent hover:text-foreground"
-            aria-label="Next month"
+            aria-label="Bulan berikutnya"
           >
             <ChevronRight className="h-4 w-4" />
           </button>
@@ -176,7 +182,7 @@ export function CalendarGrid({ year, month, events: initialEvents }: Props) {
                 ))}
                 {dayEvents.length > 3 && (
                   <p className="text-[10px] text-muted-foreground">
-                    +{dayEvents.length - 3} more
+                    +{dayEvents.length - 3} lagi
                   </p>
                 )}
               </div>
@@ -190,18 +196,18 @@ export function CalendarGrid({ year, month, events: initialEvents }: Props) {
         <div className="border-t border-border p-4 animate-slide-down">
           <div className="mb-2 flex items-center justify-between">
             <h3 className="text-sm font-semibold">
-              {format(selected, "EEEE, MMMM d, yyyy")}
+              {format(selected, "EEEE, d MMMM yyyy", { locale: idLocale })}
             </h3>
             <button
               onClick={() => setSelected(null)}
               className="text-xs text-muted-foreground hover:text-foreground"
             >
-              Clear
+              Bersihkan
             </button>
           </div>
           {selectedEvents.length === 0 ? (
             <p className="text-xs text-muted-foreground">
-              No events on this day.
+              Tidak ada agenda di hari ini.
             </p>
           ) : (
             <ul className="space-y-1.5">
@@ -230,7 +236,7 @@ export function CalendarGrid({ year, month, events: initialEvents }: Props) {
                       </span>
                     </div>
                     <span className="rounded-md bg-secondary px-1.5 py-0.5 text-[10px] uppercase tracking-wide text-muted-foreground">
-                      {e.type}
+                      {TYPE_LABEL[e.type]}
                     </span>
                   </Link>
                 </li>

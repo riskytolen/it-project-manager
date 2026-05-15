@@ -27,7 +27,7 @@ export function ProjectAttachments({ projectId, files, showProject }: Props) {
     startTransition(async () => {
       const res = await uploadFile(fd);
       if (res.error) toast.error(res.error);
-      else toast.success("File uploaded");
+      else toast.success("Berkas diunggah");
     });
   };
 
@@ -36,18 +36,18 @@ export function ProjectAttachments({ projectId, files, showProject }: Props) {
     try {
       const url = await getFileUrl(path);
       if (url) window.open(url, "_blank");
-      else toast.error("Failed to generate download link");
+      else toast.error("Gagal membuat tautan unduh");
     } finally {
       setDownloadingId(null);
     }
   };
 
   const handleDelete = (id: string, path: string, name: string) => {
-    if (!confirm(`Delete file "${name}"?`)) return;
+    if (!confirm(`Hapus berkas "${name}"?`)) return;
     startTransition(async () => {
       const res = await deleteFile(id, path);
       if (res.error) toast.error(res.error);
-      else toast.success("File deleted");
+      else toast.success("Berkas dihapus");
     });
   };
 
@@ -71,13 +71,13 @@ export function ProjectAttachments({ projectId, files, showProject }: Props) {
           className="inline-flex w-full items-center justify-center gap-2 rounded-md border border-dashed border-border bg-card px-3 py-3 text-xs font-medium text-muted-foreground transition-colors hover:border-primary hover:text-foreground disabled:opacity-50"
         >
           <Upload className="h-3.5 w-3.5" />
-          {isPending ? "Uploading..." : "Click to upload"}
+          {isPending ? "Mengunggah..." : "Klik untuk mengunggah"}
         </button>
       </div>
 
       {files.length === 0 ? (
         <p className="text-center text-xs text-muted-foreground py-2">
-          No attachments yet.
+          Belum ada lampiran.
         </p>
       ) : (
         <ul className="space-y-1.5">
@@ -93,21 +93,21 @@ export function ProjectAttachments({ projectId, files, showProject }: Props) {
                 <p className="truncate text-xs font-medium">{f.name}</p>
                 <p className="text-[10px] text-muted-foreground">
                   {formatBytes(f.size)} · {formatDateRelative(f.created_at)}
-                  {showProject && f.project_id && " · attached to project"}
+                  {showProject && f.project_id && " · terlampir di proyek"}
                 </p>
               </div>
               <button
                 onClick={() => handleDownload(f.id, f.path)}
                 disabled={downloadingId === f.id}
                 className="rounded-md p-1.5 text-muted-foreground hover:bg-accent hover:text-foreground"
-                aria-label="Download"
+                aria-label="Unduh"
               >
                 <Download className="h-3.5 w-3.5" />
               </button>
               <button
                 onClick={() => handleDelete(f.id, f.path, f.name)}
                 className="rounded-md p-1.5 text-muted-foreground hover:bg-destructive/10 hover:text-destructive"
-                aria-label="Delete"
+                aria-label="Hapus"
               >
                 <Trash2 className="h-3.5 w-3.5" />
               </button>

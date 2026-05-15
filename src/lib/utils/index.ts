@@ -1,6 +1,7 @@
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 import { format, formatDistanceToNow, isPast, isToday, isTomorrow, parseISO } from "date-fns";
+import { id as idLocale } from "date-fns/locale";
 import type {
   NoteCategory,
   Priority,
@@ -13,18 +14,18 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export function formatDate(date: string | Date | null | undefined, fmt = "MMM d, yyyy") {
+export function formatDate(date: string | Date | null | undefined, fmt = "d MMM yyyy") {
   if (!date) return "—";
   const d = typeof date === "string" ? parseISO(date) : date;
-  return format(d, fmt);
+  return format(d, fmt, { locale: idLocale });
 }
 
 export function formatDateRelative(date: string | Date | null | undefined) {
   if (!date) return "—";
   const d = typeof date === "string" ? parseISO(date) : date;
-  if (isToday(d)) return "Today";
-  if (isTomorrow(d)) return "Tomorrow";
-  return formatDistanceToNow(d, { addSuffix: true });
+  if (isToday(d)) return "Hari ini";
+  if (isTomorrow(d)) return "Besok";
+  return formatDistanceToNow(d, { addSuffix: true, locale: idLocale });
 }
 
 export function isOverdue(date: string | null | undefined, status?: string) {
@@ -45,44 +46,44 @@ export function daysUntil(date: string | null | undefined) {
 // ============= LABELS =============
 export const projectCategoryLabel: Record<ProjectCategory, string> = {
   website: "Website",
-  application: "Application",
-  maintenance: "Maintenance",
-  support: "Support",
-  infrastructure: "Infrastructure",
-  database: "Database",
-  other: "Other",
+  application: "Aplikasi",
+  maintenance: "Pemeliharaan",
+  support: "Dukungan",
+  infrastructure: "Infrastruktur",
+  database: "Basis Data",
+  other: "Lainnya",
 };
 
 export const projectStatusLabel: Record<ProjectStatus, string> = {
-  planning: "Planning",
-  ongoing: "Ongoing",
-  pending: "Pending",
-  completed: "Completed",
-  cancelled: "Cancelled",
+  planning: "Perencanaan",
+  ongoing: "Berjalan",
+  pending: "Tertunda",
+  completed: "Selesai",
+  cancelled: "Dibatalkan",
 };
 
 export const taskStatusLabel: Record<TaskStatus, string> = {
-  todo: "Todo",
-  in_progress: "In Progress",
-  testing: "Testing",
-  revision: "Revision",
-  done: "Done",
+  todo: "Belum Dikerjakan",
+  in_progress: "Dikerjakan",
+  testing: "Pengujian",
+  revision: "Revisi",
+  done: "Selesai",
 };
 
 export const priorityLabel: Record<Priority, string> = {
-  low: "Low",
-  medium: "Medium",
-  high: "High",
-  urgent: "Urgent",
+  low: "Rendah",
+  medium: "Sedang",
+  high: "Tinggi",
+  urgent: "Mendesak",
 };
 
 export const noteCategoryLabel: Record<NoteCategory, string> = {
   bug: "Bug",
-  feature_idea: "Feature Idea",
-  documentation: "Documentation",
-  maintenance: "Maintenance",
-  reminder: "Reminder",
-  general: "General",
+  feature_idea: "Ide Fitur",
+  documentation: "Dokumentasi",
+  maintenance: "Pemeliharaan",
+  reminder: "Pengingat",
+  general: "Umum",
 };
 
 // ============= COLORS =============

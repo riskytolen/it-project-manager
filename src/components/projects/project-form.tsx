@@ -22,7 +22,7 @@ export function ProjectForm({ project }: { project?: Project }) {
         if (res && "error" in res && res.error) {
           toast.error(res.error);
         } else {
-          toast.success(project ? "Project updated" : "Project created");
+          toast.success(project ? "Proyek diperbarui" : "Proyek dibuat");
         }
       } catch (e) {
         // redirect throws — this is expected on success
@@ -33,7 +33,7 @@ export function ProjectForm({ project }: { project?: Project }) {
         ) {
           throw e;
         }
-        toast.error("Something went wrong");
+        toast.error("Terjadi kesalahan");
       }
     });
   }
@@ -41,42 +41,42 @@ export function ProjectForm({ project }: { project?: Project }) {
   return (
     <form action={handleSubmit} className="space-y-5">
       <div className="space-y-1.5">
-        <Label htmlFor="name">Project Name</Label>
+        <Label htmlFor="name">Nama Proyek</Label>
         <Input
           id="name"
           name="name"
           required
           defaultValue={project?.name}
-          placeholder="e.g. Company Landing Page Redesign"
+          placeholder="mis. Redesign Landing Page Perusahaan"
         />
       </div>
 
       <div className="space-y-1.5">
-        <Label htmlFor="description">Description</Label>
+        <Label htmlFor="description">Deskripsi</Label>
         <Textarea
           id="description"
           name="description"
           rows={3}
           defaultValue={project?.description ?? ""}
-          placeholder="What this project is about, goals, scope..."
+          placeholder="Tujuan proyek, lingkup, sasaran..."
         />
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2">
         <div className="space-y-1.5">
-          <Label htmlFor="category">Category</Label>
+          <Label htmlFor="category">Kategori</Label>
           <Select
             id="category"
             name="category"
             defaultValue={project?.category ?? "website"}
           >
             <option value="website">Website</option>
-            <option value="application">Application</option>
-            <option value="maintenance">Maintenance</option>
-            <option value="support">Support</option>
-            <option value="infrastructure">Infrastructure</option>
-            <option value="database">Database</option>
-            <option value="other">Other</option>
+            <option value="application">Aplikasi</option>
+            <option value="maintenance">Pemeliharaan</option>
+            <option value="support">Dukungan</option>
+            <option value="infrastructure">Infrastruktur</option>
+            <option value="database">Basis Data</option>
+            <option value="other">Lainnya</option>
           </Select>
         </div>
 
@@ -87,30 +87,30 @@ export function ProjectForm({ project }: { project?: Project }) {
             name="status"
             defaultValue={project?.status ?? "planning"}
           >
-            <option value="planning">Planning</option>
-            <option value="ongoing">Ongoing</option>
-            <option value="pending">Pending</option>
-            <option value="completed">Completed</option>
-            <option value="cancelled">Cancelled</option>
+            <option value="planning">Perencanaan</option>
+            <option value="ongoing">Berjalan</option>
+            <option value="pending">Tertunda</option>
+            <option value="completed">Selesai</option>
+            <option value="cancelled">Dibatalkan</option>
           </Select>
         </div>
 
         <div className="space-y-1.5">
-          <Label htmlFor="priority">Priority</Label>
+          <Label htmlFor="priority">Prioritas</Label>
           <Select
             id="priority"
             name="priority"
             defaultValue={project?.priority ?? "medium"}
           >
-            <option value="low">Low</option>
-            <option value="medium">Medium</option>
-            <option value="high">High</option>
-            <option value="urgent">Urgent</option>
+            <option value="low">Rendah</option>
+            <option value="medium">Sedang</option>
+            <option value="high">Tinggi</option>
+            <option value="urgent">Mendesak</option>
           </Select>
         </div>
 
         <div className="space-y-1.5">
-          <Label htmlFor="deadline">Deadline</Label>
+          <Label htmlFor="deadline">Tenggat</Label>
           <Input
             id="deadline"
             name="deadline"
@@ -121,20 +121,20 @@ export function ProjectForm({ project }: { project?: Project }) {
       </div>
 
       <div className="space-y-1.5">
-        <Label htmlFor="notes">Additional Notes</Label>
+        <Label htmlFor="notes">Catatan Tambahan</Label>
         <Textarea
           id="notes"
           name="notes"
           rows={3}
           defaultValue={project?.notes ?? ""}
-          placeholder="Implementation notes, links, references..."
+          placeholder="Catatan implementasi, tautan, referensi..."
         />
       </div>
 
       <div className="flex items-center gap-2 border-t border-border pt-4">
         <Button type="submit" loading={isPending}>
           <Save className="h-4 w-4" />
-          {project ? "Save Changes" : "Create Project"}
+          {project ? "Simpan Perubahan" : "Buat Proyek"}
         </Button>
         <Button
           type="button"
@@ -142,7 +142,7 @@ export function ProjectForm({ project }: { project?: Project }) {
           onClick={() => router.back()}
           disabled={isPending}
         >
-          Cancel
+          Batal
         </Button>
       </div>
     </form>

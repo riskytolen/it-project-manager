@@ -15,7 +15,7 @@ export function SettingsForm({ settings }: { settings: AppSettings | null }) {
     startTransition(async () => {
       const res = await updateSettings(formData);
       if (res?.error) toast.error(res.error);
-      else toast.success("Settings saved");
+      else toast.success("Pengaturan tersimpan");
     });
   }
 
@@ -23,16 +23,16 @@ export function SettingsForm({ settings }: { settings: AppSettings | null }) {
     <form action={handleSubmit} className="space-y-4">
       <div className="grid gap-4 sm:grid-cols-2">
         <div className="space-y-1.5">
-          <Label htmlFor="display_name">Display Name</Label>
+          <Label htmlFor="display_name">Nama Tampilan</Label>
           <Input
             id="display_name"
             name="display_name"
             defaultValue={settings?.display_name ?? "IT Manager"}
-            placeholder="Your name"
+            placeholder="Nama kamu"
           />
         </div>
         <div className="space-y-1.5">
-          <Label htmlFor="weekly_goal">Weekly Task Goal</Label>
+          <Label htmlFor="weekly_goal">Target Tugas Mingguan</Label>
           <Input
             id="weekly_goal"
             name="weekly_goal"
@@ -43,20 +43,20 @@ export function SettingsForm({ settings }: { settings: AppSettings | null }) {
           />
         </div>
         <div className="space-y-1.5 sm:col-span-2">
-          <Label htmlFor="accent_color">Accent Theme</Label>
+          <Label htmlFor="accent_color">Tema Aksen</Label>
           <Select
             id="accent_color"
             name="accent_color"
             defaultValue={settings?.accent_color ?? "blue"}
           >
-            <option value="blue">Blue (default)</option>
+            <option value="blue">Biru (default)</option>
             <option value="indigo">Indigo</option>
-            <option value="emerald">Emerald</option>
-            <option value="amber">Amber</option>
-            <option value="rose">Rose</option>
+            <option value="emerald">Hijau</option>
+            <option value="amber">Kuning</option>
+            <option value="rose">Merah Muda</option>
           </Select>
           <p className="text-[11px] text-muted-foreground">
-            Note: Use the topbar toggle to switch light/dark mode.
+            Catatan: Gunakan pengalih di topbar untuk berganti mode terang/gelap.
           </p>
         </div>
       </div>
@@ -64,7 +64,7 @@ export function SettingsForm({ settings }: { settings: AppSettings | null }) {
       <div className="border-t border-border pt-4">
         <Button type="submit" loading={isPending}>
           <Save className="h-4 w-4" />
-          Save Changes
+          Simpan Perubahan
         </Button>
       </div>
     </form>

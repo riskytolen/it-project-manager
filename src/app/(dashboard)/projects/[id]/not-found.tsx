@@ -7,15 +7,15 @@ export default function NotFound() {
       <div className="flex h-16 w-16 items-center justify-center rounded-full bg-muted">
         <FolderX className="h-8 w-8 text-muted-foreground" />
       </div>
-      <h2 className="mt-4 text-xl font-semibold">Project not found</h2>
+      <h2 className="mt-4 text-xl font-semibold">Proyek tidak ditemukan</h2>
       <p className="mt-1 text-sm text-muted-foreground">
-        This project may have been deleted or never existed.
+        Proyek ini mungkin sudah dihapus atau memang tidak pernah ada.
       </p>
       <Link
         href="/projects"
         className="mt-5 inline-flex h-9 items-center rounded-md bg-primary px-4 text-sm font-medium text-primary-foreground hover:bg-primary/90"
       >
-        Back to projects
+        Kembali ke daftar proyek
       </Link>
     </div>
   );

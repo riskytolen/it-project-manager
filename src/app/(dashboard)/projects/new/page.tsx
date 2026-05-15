@@ -10,7 +10,7 @@ import {
 import { ProjectForm } from "@/components/projects/project-form";
 
 export const metadata = {
-  title: "New Project · IT Project Manager",
+  title: "Proyek Baru · IT Project Manager",
 };
 
 export default function NewProjectPage() {
@@ -21,14 +21,14 @@ export default function NewProjectPage() {
         className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground"
       >
         <ArrowLeft className="h-4 w-4" />
-        Back to projects
+        Kembali ke daftar proyek
       </Link>
 
       <Card>
         <CardHeader>
-          <CardTitle>Create Project</CardTitle>
+          <CardTitle>Buat Proyek</CardTitle>
           <CardDescription>
-            Define a new IT project to start tracking tasks and progress.
+            Definisikan proyek IT baru untuk mulai melacak tugas dan progres.
           </CardDescription>
         </CardHeader>
         <CardContent>

@@ -11,16 +11,16 @@ export function ThemeToggle() {
   useEffect(() => setMounted(true), []);
 
   const options = [
-    { value: "light", icon: Sun, label: "Light" },
-    { value: "system", icon: Monitor, label: "System" },
-    { value: "dark", icon: Moon, label: "Dark" },
+    { value: "light", icon: Sun, label: "Terang" },
+    { value: "system", icon: Monitor, label: "Sistem" },
+    { value: "dark", icon: Moon, label: "Gelap" },
   ];
 
   return (
     <div
       className="flex items-center gap-0.5 rounded-md border border-border bg-card p-0.5"
       role="radiogroup"
-      aria-label="Theme"
+      aria-label="Tema"
     >
       {options.map((opt) => {
         const Icon = opt.icon;

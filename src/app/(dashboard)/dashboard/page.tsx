@@ -95,13 +95,13 @@ export default async function DashboardPage() {
         <div className="relative">
           <div className="flex items-center gap-2 text-xs font-medium uppercase tracking-wider text-primary">
             <Sparkles className="h-3.5 w-3.5" />
-            Workspace
+            Ruang Kerja
           </div>
           <h1 className="mt-2 text-2xl font-bold sm:text-3xl">
-            Welcome back
+            Selamat datang kembali
           </h1>
           <p className="mt-1.5 max-w-xl text-sm text-muted-foreground">
-            Here&apos;s an overview of your IT projects, tasks, and upcoming deadlines.
+            Berikut ringkasan proyek IT, tugas, dan tenggat waktu yang akan datang.
           </p>
           <div className="mt-4 flex flex-wrap gap-2">
             <Link
@@ -109,13 +109,13 @@ export default async function DashboardPage() {
               className="inline-flex h-9 items-center gap-2 rounded-md bg-primary px-4 text-sm font-medium text-primary-foreground shadow-sm hover:bg-primary/90"
             >
               <Plus className="h-4 w-4" />
-              New Project
+              Proyek Baru
             </Link>
             <Link
               href="/board"
               className="inline-flex h-9 items-center gap-2 rounded-md border border-border bg-card px-4 text-sm font-medium hover:bg-accent"
             >
-              Open Task Board
+              Buka Papan Tugas
             </Link>
           </div>
         </div>
@@ -124,15 +124,15 @@ export default async function DashboardPage() {
       {isEmpty ? (
         <EmptyState
           icon={FolderKanban}
-          title="No projects yet"
-          description="Start by creating your first IT project to track tasks, deadlines, and progress."
+          title="Belum ada proyek"
+          description="Mulai dengan membuat proyek IT pertama untuk melacak tugas, tenggat, dan progres."
           action={
             <Link
               href="/projects/new"
               className="inline-flex h-9 items-center gap-2 rounded-md bg-primary px-4 text-sm font-medium text-primary-foreground hover:bg-primary/90"
             >
               <Plus className="h-4 w-4" />
-              Create First Project
+              Buat Proyek Pertama
             </Link>
           }
         />
@@ -141,38 +141,38 @@ export default async function DashboardPage() {
           {/* Stats grid */}
           <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
             <StatCard
-              label="Active Projects"
+              label="Proyek Aktif"
               value={activeProjects.length}
               icon={FolderKanban}
               hint={`${allProjects.length} total`}
               accent="primary"
             />
             <StatCard
-              label="Completed"
+              label="Selesai"
               value={completedProjects.length}
               icon={CheckCircle2}
-              hint="Finished projects"
+              hint="Proyek tuntas"
               accent="success"
             />
             <StatCard
-              label="Overdue"
+              label="Terlambat"
               value={overdueTasks.length}
               icon={AlertTriangle}
-              hint="Tasks past deadline"
+              hint="Tugas lewat tenggat"
               accent="danger"
             />
             <StatCard
-              label="Upcoming"
+              label="Akan Datang"
               value={upcoming.length}
               icon={Clock}
-              hint="Next deadlines"
+              hint="Tenggat berikutnya"
               accent="warning"
             />
             <StatCard
-              label="Avg Progress"
+              label="Rata-rata Progres"
               value={`${totalProgress}%`}
               icon={TrendingUp}
-              hint="Across all projects"
+              hint="Seluruh proyek"
               accent="info"
             />
           </div>
@@ -181,8 +181,8 @@ export default async function DashboardPage() {
           <div className="grid gap-4 lg:grid-cols-2">
             <Card>
               <CardHeader>
-                <CardTitle>Project Status</CardTitle>
-                <CardDescription>Distribution by current state</CardDescription>
+                <CardTitle>Status Proyek</CardTitle>
+                <CardDescription>Distribusi berdasarkan status saat ini</CardDescription>
               </CardHeader>
               <CardContent>
                 <StatusPieChart data={projectStatusData} />
@@ -190,8 +190,8 @@ export default async function DashboardPage() {
             </Card>
             <Card>
               <CardHeader>
-                <CardTitle>Tasks by Status</CardTitle>
-                <CardDescription>How your work is distributed</CardDescription>
+                <CardTitle>Tugas per Status</CardTitle>
+                <CardDescription>Sebaran pekerjaan kamu</CardDescription>
               </CardHeader>
               <CardContent>
                 <TasksBarChart data={taskStatusData} />
@@ -204,20 +204,20 @@ export default async function DashboardPage() {
             <Card className="lg:col-span-2">
               <CardHeader className="flex-row items-center justify-between">
                 <div>
-                  <CardTitle>Active Projects</CardTitle>
-                  <CardDescription>In planning, ongoing, or pending</CardDescription>
+                  <CardTitle>Proyek Aktif</CardTitle>
+                  <CardDescription>Dalam tahap perencanaan, berjalan, atau tertunda</CardDescription>
                 </div>
                 <Link
                   href="/projects"
                   className="text-xs font-medium text-primary hover:underline"
                 >
-                  View all →
+                  Lihat semua →
                 </Link>
               </CardHeader>
               <CardContent className="space-y-3">
                 {activeProjects.length === 0 ? (
                   <p className="py-8 text-center text-sm text-muted-foreground">
-                    No active projects.
+                    Tidak ada proyek aktif.
                   </p>
                 ) : (
                   activeProjects.slice(0, 5).map((p) => (
@@ -251,7 +251,7 @@ export default async function DashboardPage() {
                       {p.deadline && (
                         <div className="mt-2 flex items-center gap-1.5 text-xs text-muted-foreground">
                           <Target className="h-3 w-3" />
-                          Due {formatDate(p.deadline)}
+                          Tenggat {formatDate(p.deadline)}
                         </div>
                       )}
                     </Link>
@@ -262,13 +262,13 @@ export default async function DashboardPage() {
 
             <Card>
               <CardHeader>
-                <CardTitle>Recent Activity</CardTitle>
-                <CardDescription>Last actions in your workspace</CardDescription>
+                <CardTitle>Aktivitas Terbaru</CardTitle>
+                <CardDescription>Aksi terakhir di ruang kerja kamu</CardDescription>
               </CardHeader>
               <CardContent>
                 {allActivities.length === 0 ? (
                   <p className="py-8 text-center text-sm text-muted-foreground">
-                    No activity yet.
+                    Belum ada aktivitas.
                   </p>
                 ) : (
                   <ol className="relative space-y-4">
@@ -293,13 +293,13 @@ export default async function DashboardPage() {
           {/* Upcoming deadlines */}
           <Card>
             <CardHeader>
-              <CardTitle>Upcoming Deadlines</CardTitle>
-              <CardDescription>Tasks with the nearest due dates</CardDescription>
+              <CardTitle>Tenggat Akan Datang</CardTitle>
+              <CardDescription>Tugas dengan tenggat terdekat</CardDescription>
             </CardHeader>
             <CardContent>
               {upcoming.length === 0 ? (
                 <p className="py-8 text-center text-sm text-muted-foreground">
-                  All caught up. No upcoming task deadlines.
+                  Semuanya beres. Tidak ada tenggat tugas yang akan datang.
                 </p>
               ) : (
                 <div className="space-y-2">

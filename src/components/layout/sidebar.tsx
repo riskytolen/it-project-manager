@@ -16,13 +16,13 @@ import {
 import { cn } from "@/lib/utils";
 
 const navigation = [
-  { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
-  { name: "Projects", href: "/projects", icon: FolderKanban },
-  { name: "Task Board", href: "/board", icon: KanbanSquare },
-  { name: "Calendar", href: "/calendar", icon: CalendarDays },
-  { name: "Notes", href: "/notes", icon: StickyNote },
-  { name: "Files", href: "/files", icon: Files },
-  { name: "Settings", href: "/settings", icon: Settings },
+  { name: "Dasbor", href: "/dashboard", icon: LayoutDashboard },
+  { name: "Proyek", href: "/projects", icon: FolderKanban },
+  { name: "Papan Tugas", href: "/board", icon: KanbanSquare },
+  { name: "Kalender", href: "/calendar", icon: CalendarDays },
+  { name: "Catatan", href: "/notes", icon: StickyNote },
+  { name: "Berkas", href: "/files", icon: Files },
+  { name: "Pengaturan", href: "/settings", icon: Settings },
 ];
 
 interface SidebarProps {
@@ -61,14 +61,14 @@ export function Sidebar({ open, onClose }: SidebarProps) {
                 IT Manager
               </span>
               <span className="text-[10px] uppercase tracking-wider text-muted-foreground">
-                Personal workspace
+                Ruang kerja pribadi
               </span>
             </div>
           </Link>
           <button
             onClick={onClose}
             className="lg:hidden rounded-md p-1.5 text-muted-foreground hover:bg-accent"
-            aria-label="Close sidebar"
+            aria-label="Tutup sidebar"
           >
             <X className="h-4 w-4" />
           </button>
@@ -112,9 +112,9 @@ export function Sidebar({ open, onClose }: SidebarProps) {
         {/* Footer */}
         <div className="border-t border-border p-4">
           <div className="rounded-lg bg-gradient-to-br from-orange-600/10 to-orange-800/10 p-3 text-xs">
-            <p className="font-medium text-foreground">Stay focused</p>
+            <p className="font-medium text-foreground">Tetap fokus</p>
             <p className="mt-1 text-muted-foreground">
-              Track every project & task in one place.
+              Lacak semua proyek &amp; tugas di satu tempat.
             </p>
           </div>
         </div>

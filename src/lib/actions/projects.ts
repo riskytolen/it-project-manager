@@ -26,7 +26,7 @@ const projectStatusEnum = z.enum([
 const priorityEnum = z.enum(["low", "medium", "high", "urgent"]);
 
 const projectSchema = z.object({
-  name: z.string().trim().min(1, "Name is required").max(120),
+  name: z.string().trim().min(1, "Nama wajib diisi").max(120),
   description: z.string().trim().optional().nullable(),
   category: projectCategoryEnum,
   status: projectStatusEnum,
@@ -69,7 +69,7 @@ async function logActivity(
 export async function createProject(formData: FormData) {
   const parsed = projectSchema.safeParse(fd(formData));
   if (!parsed.success) {
-    return { error: parsed.error.issues[0]?.message ?? "Invalid input" };
+    return { error: parsed.error.issues[0]?.message ?? "Input tidak valid" };
   }
 
   const supabase = await createClient();
@@ -85,7 +85,7 @@ export async function createProject(formData: FormData) {
     "project",
     data.id,
     "created",
-    `Project "${data.name}" was created`,
+    `Proyek "${data.name}" dibuat`,
   );
 
   revalidatePath("/projects");
@@ -96,7 +96,7 @@ export async function createProject(formData: FormData) {
 export async function updateProject(id: string, formData: FormData) {
   const parsed = projectSchema.safeParse(fd(formData));
   if (!parsed.success) {
-    return { error: parsed.error.issues[0]?.message ?? "Invalid input" };
+    return { error: parsed.error.issues[0]?.message ?? "Input tidak valid" };
   }
 
   const supabase = await createClient();
@@ -111,7 +111,7 @@ export async function updateProject(id: string, formData: FormData) {
     "project",
     id,
     "updated",
-    `Project "${parsed.data.name}" was updated`,
+    `Proyek "${parsed.data.name}" diperbarui`,
   );
 
   revalidatePath("/projects");
@@ -135,7 +135,7 @@ export async function deleteProject(id: string) {
     "project",
     id,
     "deleted",
-    `Project "${project?.name ?? id}" was deleted`,
+    `Proyek "${project?.name ?? id}" dihapus`,
   );
 
   revalidatePath("/projects");

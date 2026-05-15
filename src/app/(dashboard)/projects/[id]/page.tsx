@@ -112,7 +112,7 @@ export default async function ProjectDetailPage({
           className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground"
         >
           <ArrowLeft className="h-4 w-4" />
-          Back to projects
+          Kembali ke daftar proyek
         </Link>
         <div className="flex items-center gap-2">
           <Link
@@ -138,7 +138,7 @@ export default async function ProjectDetailPage({
             </Badge>
             {overdue && (
               <Badge className="border-red-200 bg-red-100 text-red-700 dark:border-red-900 dark:bg-red-950 dark:text-red-300">
-                Overdue
+                Terlambat
               </Badge>
             )}
           </div>
@@ -153,7 +153,7 @@ export default async function ProjectDetailPage({
           <div className="mt-5 grid gap-4 border-t border-border pt-5 sm:grid-cols-3">
             <div>
               <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-                Deadline
+                Tenggat
               </p>
               <p className="mt-1 inline-flex items-center gap-1.5 text-sm font-medium">
                 <CalendarDays className="h-4 w-4 text-muted-foreground" />
@@ -167,7 +167,7 @@ export default async function ProjectDetailPage({
             </div>
             <div>
               <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-                Created
+                Dibuat
               </p>
               <p className="mt-1 inline-flex items-center gap-1.5 text-sm font-medium">
                 <Clock className="h-4 w-4 text-muted-foreground" />
@@ -176,7 +176,7 @@ export default async function ProjectDetailPage({
             </div>
             <div>
               <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-                Last Updated
+                Diperbarui
               </p>
               <p className="mt-1 inline-flex items-center gap-1.5 text-sm font-medium">
                 <Clock className="h-4 w-4 text-muted-foreground" />
@@ -188,7 +188,7 @@ export default async function ProjectDetailPage({
           <div className="mt-5 border-t border-border pt-5">
             <div className="mb-2 flex items-center justify-between">
               <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-                Project Progress
+                Progres Proyek
               </p>
               <span className="text-sm font-semibold tabular-nums">
                 {proj.progress}%
@@ -225,11 +225,10 @@ export default async function ProjectDetailPage({
             <div>
               <CardTitle className="flex items-center gap-2">
                 <ListChecks className="h-5 w-5 text-primary" />
-                Tasks
+                Tugas
               </CardTitle>
               <CardDescription>
-                {allTasks.length} {allTasks.length === 1 ? "task" : "tasks"}{" "}
-                in this project
+                {allTasks.length} tugas dalam proyek ini
               </CardDescription>
             </div>
             <AddTaskButton projectId={proj.id} />
@@ -245,7 +244,7 @@ export default async function ProjectDetailPage({
               <CardHeader>
                 <CardTitle className="flex items-center gap-2 text-base">
                   <StickyNote className="h-4 w-4 text-primary" />
-                  Notes
+                  Catatan
                 </CardTitle>
               </CardHeader>
               <CardContent>
@@ -260,10 +259,10 @@ export default async function ProjectDetailPage({
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-base">
                 <FileText className="h-4 w-4 text-primary" />
-                Attachments
+                Lampiran
               </CardTitle>
               <CardDescription>
-                Files linked to this project
+                Berkas yang terhubung dengan proyek ini
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -278,9 +277,9 @@ export default async function ProjectDetailPage({
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-base">
                 <Clock className="h-4 w-4 text-primary" />
-                Timeline
+                Linimasa
               </CardTitle>
-              <CardDescription>Recent task activity</CardDescription>
+              <CardDescription>Aktivitas tugas terbaru</CardDescription>
             </CardHeader>
             <CardContent>
               {(() => {
@@ -292,7 +291,7 @@ export default async function ProjectDetailPage({
                 if (filtered.length === 0) {
                   return (
                     <p className="py-4 text-center text-xs text-muted-foreground">
-                      No activity yet.
+                      Belum ada aktivitas.
                     </p>
                   );
                 }
