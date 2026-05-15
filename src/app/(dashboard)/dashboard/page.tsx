@@ -90,7 +90,7 @@ export default async function DashboardPage() {
   return (
     <div className="space-y-6 animate-fade-in">
       {/* Hero */}
-      <div className="relative overflow-hidden rounded-2xl border border-border bg-gradient-to-br from-blue-500/10 via-indigo-500/5 to-transparent p-6 sm:p-8">
+      <div className="relative overflow-hidden rounded-2xl border border-border bg-gradient-to-br from-orange-700/15 via-amber-600/5 to-transparent p-6 sm:p-8">
         <div className="grid-bg absolute inset-0 opacity-30" />
         <div className="relative">
           <div className="flex items-center gap-2 text-xs font-medium uppercase tracking-wider text-primary">

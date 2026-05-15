@@ -53,7 +53,7 @@ export function Sidebar({ open, onClose }: SidebarProps) {
         {/* Brand */}
         <div className="flex h-16 items-center justify-between border-b border-border px-5">
           <Link href="/dashboard" className="flex items-center gap-2.5 group">
-            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-br from-blue-500 to-indigo-600 text-white shadow-sm transition-transform group-hover:scale-105">
+            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-br from-orange-600 to-orange-800 text-white shadow-sm transition-transform group-hover:scale-105">
               <Code2 className="h-5 w-5" strokeWidth={2.2} />
             </div>
             <div className="flex flex-col">
@@ -111,7 +111,7 @@ export function Sidebar({ open, onClose }: SidebarProps) {
 
         {/* Footer */}
         <div className="border-t border-border p-4">
-          <div className="rounded-lg bg-gradient-to-br from-blue-500/10 to-indigo-500/10 p-3 text-xs">
+          <div className="rounded-lg bg-gradient-to-br from-orange-600/10 to-orange-800/10 p-3 text-xs">
             <p className="font-medium text-foreground">Stay focused</p>
             <p className="mt-1 text-muted-foreground">
               Track every project & task in one place.
