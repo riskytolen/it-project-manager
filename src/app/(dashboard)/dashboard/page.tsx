@@ -4,6 +4,7 @@ import {
   CheckCircle2,
   Clock,
   FolderKanban,
+  FolderOpen,
   Plus,
   Sparkles,
   Target,
@@ -32,7 +33,7 @@ import {
 } from "@/lib/utils";
 import { buildWorkspaceWhatsAppReport } from "@/lib/utils/whatsapp-report";
 import { buildBoardUrl, getAppUrl } from "@/lib/utils/app-url";
-import type { Project, Task, ActivityLog } from "@/types";
+import type { Project, Task, ActivityLog, Module } from "@/types";
 
 export const dynamic = "force-dynamic";
 
@@ -43,6 +44,7 @@ export default async function DashboardPage() {
     { data: projects },
     { data: tasks },
     { data: activities },
+    { data: modules },
   ] = await Promise.all([
     supabase.from("projects").select("*").order("updated_at", { ascending: false }),
     supabase.from("tasks").select("*").order("deadline", { ascending: true, nullsFirst: false }),
@@ -51,11 +53,16 @@ export default async function DashboardPage() {
       .select("*")
       .order("created_at", { ascending: false })
       .limit(8),
+    supabase
+      .from("modules")
+      .select("*")
+      .order("position", { ascending: true }),
   ]);
 
   const allProjects = (projects ?? []) as Project[];
   const allTasks = (tasks ?? []) as Task[];
   const allActivities = (activities ?? []) as ActivityLog[];
+  const allModules = (modules ?? []) as Module[];
 
   const activeProjects = allProjects.filter(
     (p) => p.status === "ongoing" || p.status === "planning" || p.status === "pending",
@@ -65,6 +72,16 @@ export default async function DashboardPage() {
   const upcoming = allTasks
     .filter((t) => t.deadline && t.status !== "done" && !isOverdue(t.deadline, t.status))
     .slice(0, 5);
+
+  // Module stats
+  const completedModules = allModules.filter((m) => m.status === "completed").length;
+  const modulesByProject = new Map<string, Module[]>();
+  for (const m of allModules) {
+    if (!modulesByProject.has(m.project_id)) {
+      modulesByProject.set(m.project_id, []);
+    }
+    modulesByProject.get(m.project_id)!.push(m);
+  }
 
   const totalProgress =
     allProjects.length === 0
@@ -155,13 +172,20 @@ export default async function DashboardPage() {
       ) : (
         <>
           {/* Stats grid */}
-          <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
+          <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">
             <StatCard
               label="Proyek Aktif"
               value={activeProjects.length}
               icon={FolderKanban}
               hint={`${allProjects.length} total`}
               accent="primary"
+            />
+            <StatCard
+              label="Modul"
+              value={allModules.length}
+              icon={FolderOpen}
+              hint={`${completedModules} selesai`}
+              accent="info"
             />
             <StatCard
               label="Selesai"
@@ -236,7 +260,9 @@ export default async function DashboardPage() {
                     Tidak ada proyek aktif.
                   </p>
                 ) : (
-                  activeProjects.slice(0, 5).map((p) => (
+                  activeProjects.slice(0, 5).map((p) => {
+                    const projectModules = modulesByProject.get(p.id) ?? [];
+                    return (
                     <Link
                       key={p.id}
                       href={`/projects/${p.id}`}
@@ -264,14 +290,23 @@ export default async function DashboardPage() {
                           {p.progress}%
                         </span>
                       </div>
-                      {p.deadline && (
-                        <div className="mt-2 flex items-center gap-1.5 text-xs text-muted-foreground">
-                          <Target className="h-3 w-3" />
-                          Tenggat {formatDate(p.deadline)}
-                        </div>
-                      )}
+                      <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted-foreground">
+                        {projectModules.length > 0 && (
+                          <span className="inline-flex items-center gap-1">
+                            <FolderOpen className="h-3 w-3" />
+                            {projectModules.length} modul
+                          </span>
+                        )}
+                        {p.deadline && (
+                          <span className="inline-flex items-center gap-1.5">
+                            <Target className="h-3 w-3" />
+                            Tenggat {formatDate(p.deadline)}
+                          </span>
+                        )}
+                      </div>
                     </Link>
-                  ))
+                    );
+                  })
                 )}
               </CardContent>
             </Card>

@@ -24,6 +24,7 @@ import {
   CircleDashed,
   ClipboardCheck,
   FlaskConical,
+  FolderOpen,
   ListChecks,
   Loader2,
   MessageSquare,
@@ -133,6 +134,7 @@ interface Props {
   initialTasks: Task[];
   initialChecklists?: TaskChecklist[];
   projects: Pick<Project, "id" | "name">[];
+  modules?: Pick<import("@/types").Module, "id" | "name" | "project_id">[];
   selectedProjectId?: string;
 }
 
@@ -140,6 +142,7 @@ export function KanbanBoard({
   initialTasks,
   initialChecklists = [],
   projects,
+  modules = [],
   selectedProjectId,
 }: Props) {
   const [tasks, setTasks] = useState<Task[]>(initialTasks);
@@ -213,6 +216,21 @@ export function KanbanBoard({
     for (const p of projects) m.set(p.id, p.name);
     return m;
   }, [projects]);
+
+  const moduleMap = useMemo(() => {
+    const m = new Map<string, string>();
+    for (const x of modules) m.set(x.id, x.name);
+    return m;
+  }, [modules]);
+
+  const modulesByProject = useMemo(() => {
+    const m = new Map<string, typeof modules>();
+    for (const x of modules) {
+      if (!m.has(x.project_id)) m.set(x.project_id, []);
+      m.get(x.project_id)!.push(x);
+    }
+    return m;
+  }, [modules]);
 
   const defaultProjectIdForCreate =
     selectedProjectId && selectedProjectId !== "all"
@@ -334,6 +352,11 @@ export function KanbanBoard({
                       task={task}
                       isDragging={snap.isDragging}
                       projectName={projectMap.get(task.project_id)}
+                      moduleName={
+                        task.module_id
+                          ? moduleMap.get(task.module_id)
+                          : undefined
+                      }
                       checklist={checklistByTask.get(task.id) ?? []}
                       onEdit={() => setEditing(task)}
                     />
@@ -458,12 +481,18 @@ export function KanbanBoard({
         onClose={() => setEditing(null)}
         projectId={editing?.project_id ?? ""}
         task={editing}
+        modules={
+          editing
+            ? modulesByProject.get(editing.project_id) ?? []
+            : modules
+        }
       />
       {creating && (
         <TaskModal
           open
           onClose={() => setCreating(null)}
           projectId={creating.projectId}
+          modules={modulesByProject.get(creating.projectId) ?? []}
         />
       )}
     </>
@@ -474,6 +503,7 @@ interface TaskCardProps {
   task: Task;
   isDragging: boolean;
   projectName?: string;
+  moduleName?: string;
   checklist: TaskChecklist[];
   onEdit: () => void;
   draggableProps: React.HTMLAttributes<HTMLDivElement>;
@@ -485,6 +515,7 @@ const TaskCard = forwardRef<HTMLDivElement, TaskCardProps>(function TaskCard(
     task,
     isDragging,
     projectName,
+    moduleName,
     checklist,
     onEdit,
     draggableProps,
@@ -598,16 +629,22 @@ const TaskCard = forwardRef<HTMLDivElement, TaskCardProps>(function TaskCard(
         </div>
       )}
 
-      {/* Footer: project + meta */}
+      {/* Footer: project + module + meta */}
       <div className="mt-3 flex items-center justify-between gap-2 text-[11px] text-muted-foreground">
-        {projectName ? (
-          <span className="inline-flex max-w-[60%] items-center gap-1.5 truncate">
-            <span className="h-1 w-1 shrink-0 rounded-full bg-muted-foreground/50" />
-            <span className="truncate font-medium">{projectName}</span>
-          </span>
-        ) : (
-          <span />
-        )}
+        <div className="flex min-w-0 flex-1 flex-col gap-0.5">
+          {projectName && (
+            <span className="inline-flex max-w-full items-center gap-1.5 truncate">
+              <span className="h-1 w-1 shrink-0 rounded-full bg-muted-foreground/50" />
+              <span className="truncate font-medium">{projectName}</span>
+            </span>
+          )}
+          {moduleName && (
+            <span className="inline-flex max-w-full items-center gap-1 truncate pl-2.5 text-[10px] text-muted-foreground/70">
+              <FolderOpen className="h-2.5 w-2.5 shrink-0" />
+              <span className="truncate">{moduleName}</span>
+            </span>
+          )}
+        </div>
 
         <div className="flex shrink-0 items-center gap-2.5">
           {task.notes && (
