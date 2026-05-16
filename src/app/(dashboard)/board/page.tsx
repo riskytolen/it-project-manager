@@ -69,49 +69,46 @@ export default async function BoardPage({
       : null;
 
   return (
-    <div className="space-y-6 animate-fade-in">
-      {/* Hero */}
-      <div className="relative overflow-hidden rounded-2xl border border-border bg-gradient-to-br from-orange-700/15 via-amber-600/5 to-transparent p-6 sm:p-8">
-        <div className="grid-bg absolute inset-0 opacity-30" />
-        <div className="relative flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-          <div className="space-y-2">
-            <div className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-wider text-primary">
-              <KanbanSquare className="h-3.5 w-3.5" />
-              Papan Tugas
-            </div>
-            <h1 className="text-2xl font-bold sm:text-3xl">
-              {selectedProjectName ?? "Semua Tugas"}
+    <div className="space-y-4 animate-fade-in">
+      {/* Compact header */}
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex items-center gap-3">
+          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-orange-600 to-orange-800 text-white shadow-sm">
+            <KanbanSquare className="h-5 w-5" />
+          </div>
+          <div className="min-w-0">
+            <h1 className="text-lg font-semibold leading-tight sm:text-xl">
+              {selectedProjectName ?? "Papan Tugas"}
             </h1>
-            <p className="max-w-xl text-sm text-muted-foreground">
-              Seret kartu antar kolom untuk memperbarui status. Tetap fokus,
-              kelola alur kerja, dan rayakan kemajuan.
+            <p className="text-xs text-muted-foreground">
+              Seret kartu antar kolom untuk memperbarui status
             </p>
           </div>
-
-          <form className="flex items-center gap-2 self-stretch sm:self-end">
-            <div className="relative flex items-center">
-              <Filter className="pointer-events-none absolute left-3 h-3.5 w-3.5 text-muted-foreground" />
-              <select
-                name="project"
-                defaultValue={params.project ?? "all"}
-                className="h-9 w-full appearance-none rounded-md border border-input bg-card pl-9 pr-3 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring sm:w-56"
-              >
-                <option value="all">Semua Proyek</option>
-                {allProjects.map((p) => (
-                  <option key={p.id} value={p.id}>
-                    {p.name}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <button
-              type="submit"
-              className="inline-flex h-9 items-center gap-1.5 rounded-md bg-primary px-3.5 text-xs font-medium text-primary-foreground shadow-sm hover:bg-primary/90 active:scale-[0.98]"
-            >
-              Terapkan
-            </button>
-          </form>
         </div>
+
+        <form className="flex items-center gap-2">
+          <div className="relative flex items-center">
+            <Filter className="pointer-events-none absolute left-3 h-3.5 w-3.5 text-muted-foreground" />
+            <select
+              name="project"
+              defaultValue={params.project ?? "all"}
+              className="h-9 w-full appearance-none rounded-md border border-input bg-card pl-9 pr-3 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring sm:w-56"
+            >
+              <option value="all">Semua Proyek</option>
+              {allProjects.map((p) => (
+                <option key={p.id} value={p.id}>
+                  {p.name}
+                </option>
+              ))}
+            </select>
+          </div>
+          <button
+            type="submit"
+            className="inline-flex h-9 items-center gap-1.5 rounded-md bg-primary px-3.5 text-xs font-medium text-primary-foreground shadow-sm hover:bg-primary/90 active:scale-[0.98]"
+          >
+            Terapkan
+          </button>
+        </form>
       </div>
 
       {allProjects.length === 0 ? (
@@ -131,16 +128,16 @@ export default async function BoardPage({
         />
       ) : (
         <>
-          {/* Stats overview */}
-          <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
+          {/* Compact stats strip */}
+          <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
             <BoardStat
-              label="Total Tugas"
+              label="Total"
               value={totalTasks}
               icon={ListTodo}
               tone="primary"
             />
             <BoardStat
-              label="Sedang Dikerjakan"
+              label="Dikerjakan"
               value={inProgressTasks}
               icon={Loader2}
               tone="info"
@@ -189,21 +186,19 @@ function BoardStat({
     danger: "bg-red-500/10 text-red-600 dark:text-red-400",
   };
   return (
-    <div className="group relative overflow-hidden rounded-xl border border-border bg-card p-4 transition-all hover:shadow-sm hover:-translate-y-0.5">
-      <div className="flex items-center justify-between gap-3">
-        <div>
-          <p className="text-[11px] font-medium uppercase tracking-wider text-muted-foreground">
-            {label}
-          </p>
-          <p className="mt-1 text-2xl font-semibold tabular-nums leading-none">
-            {value}
-          </p>
-        </div>
-        <div
-          className={`flex h-10 w-10 items-center justify-center rounded-lg transition-transform group-hover:scale-110 ${tones[tone]}`}
-        >
-          <Icon className="h-5 w-5" />
-        </div>
+    <div className="flex items-center gap-2.5 rounded-lg border border-border bg-card px-3 py-2 transition-colors hover:bg-accent/30">
+      <div
+        className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-md ${tones[tone]}`}
+      >
+        <Icon className="h-4 w-4" />
+      </div>
+      <div className="min-w-0">
+        <p className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground leading-none">
+          {label}
+        </p>
+        <p className="mt-1 text-base font-semibold tabular-nums leading-none truncate">
+          {value}
+        </p>
       </div>
     </div>
   );
