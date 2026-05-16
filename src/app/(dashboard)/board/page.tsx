@@ -73,21 +73,21 @@ export default async function BoardPage({
       {/* Compact header */}
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-orange-600 to-orange-800 text-white shadow-sm">
+          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-orange-600 to-orange-800 text-white shadow-sm">
             <KanbanSquare className="h-5 w-5" />
           </div>
           <div className="min-w-0">
-            <h1 className="text-lg font-semibold leading-tight sm:text-xl">
+            <h1 className="truncate text-lg font-semibold leading-tight sm:text-xl">
               {selectedProjectName ?? "Papan Tugas"}
             </h1>
-            <p className="text-xs text-muted-foreground">
+            <p className="text-xs text-muted-foreground line-clamp-1">
               Seret kartu antar kolom untuk memperbarui status
             </p>
           </div>
         </div>
 
-        <form className="flex items-center gap-2">
-          <div className="relative flex items-center">
+        <form className="flex w-full items-center gap-2 sm:w-auto">
+          <div className="relative flex flex-1 items-center sm:flex-none">
             <Filter className="pointer-events-none absolute left-3 h-3.5 w-3.5 text-muted-foreground" />
             <select
               name="project"
@@ -104,7 +104,7 @@ export default async function BoardPage({
           </div>
           <button
             type="submit"
-            className="inline-flex h-9 items-center gap-1.5 rounded-md bg-primary px-3.5 text-xs font-medium text-primary-foreground shadow-sm hover:bg-primary/90 active:scale-[0.98]"
+            className="inline-flex h-9 shrink-0 items-center gap-1.5 rounded-md bg-primary px-3.5 text-xs font-medium text-primary-foreground shadow-sm hover:bg-primary/90 active:scale-[0.98]"
           >
             Terapkan
           </button>
