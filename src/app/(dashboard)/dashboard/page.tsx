@@ -22,6 +22,7 @@ import {
 import { EmptyState } from "@/components/ui/empty-state";
 import { Progress } from "@/components/ui/progress";
 import { ProjectStatusBadge, PriorityBadge } from "@/components/ui/status-badge";
+import { WhatsAppShareButton } from "@/components/share/whatsapp-share-button";
 import {
   formatDate,
   formatDateRelative,
@@ -29,6 +30,7 @@ import {
   projectStatusLabel,
   taskStatusLabel,
 } from "@/lib/utils";
+import { buildWorkspaceWhatsAppReport } from "@/lib/utils/whatsapp-report";
 import type { Project, Task, ActivityLog } from "@/types";
 
 export const dynamic = "force-dynamic";
@@ -87,6 +89,11 @@ export default async function DashboardPage() {
 
   const isEmpty = allProjects.length === 0 && allTasks.length === 0;
 
+  const waReport = buildWorkspaceWhatsAppReport({
+    projects: allProjects,
+    tasks: allTasks,
+  });
+
   return (
     <div className="space-y-6 animate-fade-in">
       {/* Hero */}
@@ -117,6 +124,12 @@ export default async function DashboardPage() {
             >
               Buka Papan Tugas
             </Link>
+            {!isEmpty && (
+              <WhatsAppShareButton
+                text={waReport}
+                label="Bagikan ke WhatsApp"
+              />
+            )}
           </div>
         </div>
       </div>

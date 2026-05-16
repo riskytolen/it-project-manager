@@ -28,6 +28,7 @@ import { TaskList } from "@/components/tasks/task-list";
 import { AddTaskButton } from "@/components/tasks/add-task-button";
 import { DeleteProjectButton } from "@/components/projects/delete-project-button";
 import { ProjectAttachments } from "@/components/projects/project-attachments";
+import { WhatsAppShareButton } from "@/components/share/whatsapp-share-button";
 import {
   formatDate,
   formatDateRelative,
@@ -35,6 +36,7 @@ import {
   projectCategoryLabel,
   taskStatusLabel,
 } from "@/lib/utils";
+import { buildProjectWhatsAppReport } from "@/lib/utils/whatsapp-report";
 import type {
   ActivityLog,
   FileRecord,
@@ -104,6 +106,12 @@ export default async function ProjectDetailPage({
 
   const overdue = isOverdue(proj.deadline, proj.status);
 
+  const waReport = buildProjectWhatsAppReport({
+    project: proj,
+    tasks: allTasks,
+    activities: ((activities ?? []) as ActivityLog[]).slice(0, 5),
+  });
+
   return (
     <div className="space-y-6 animate-fade-in">
       <div className="flex flex-wrap items-center justify-between gap-3">
@@ -115,6 +123,11 @@ export default async function ProjectDetailPage({
           Kembali ke daftar proyek
         </Link>
         <div className="flex items-center gap-2">
+          <WhatsAppShareButton
+            text={waReport}
+            label="Bagikan Laporan"
+            variant="outline"
+          />
           <Link
             href={`/projects/${proj.id}/edit`}
             className="inline-flex h-9 items-center gap-2 rounded-md border border-border bg-card px-3.5 text-sm font-medium hover:bg-accent"
