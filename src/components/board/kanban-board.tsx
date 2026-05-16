@@ -220,24 +220,39 @@ export function KanbanBoard({
   return (
     <>
       <DragDropContext onDragEnd={onDragEnd}>
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-5">
-          {COLUMNS.map((status) => {
-            const theme = COLUMN_THEMES[status];
-            const ColIcon = theme.icon;
-            const items = grouped[status];
+        {/* Mobile/tablet: horizontal scroll. Desktop (xl+): 5-col grid. */}
+        <div className="-mx-4 sm:-mx-6 lg:mx-0">
+          <div
+            className={cn(
+              "px-4 pb-2 sm:px-6 lg:px-0",
+              // < xl: horizontal scroller with snap
+              "flex gap-3 overflow-x-auto scrollbar-thin snap-x snap-mandatory",
+              // xl+: switch to grid
+              "xl:grid xl:grid-cols-5 xl:gap-4 xl:overflow-visible xl:snap-none",
+            )}
+          >
+            {COLUMNS.map((status) => {
+              const theme = COLUMN_THEMES[status];
+              const ColIcon = theme.icon;
+              const items = grouped[status];
 
-            return (
-              <Droppable key={status} droppableId={status}>
-                {(provided, snapshot) => (
-                  <div
-                    ref={provided.innerRef}
-                    {...provided.droppableProps}
-                    className={cn(
-                      "group/col relative flex flex-col rounded-xl border border-border bg-card/50 transition-all",
-                      snapshot.isDraggingOver &&
-                        `ring-2 ring-offset-2 ring-offset-background ${theme.dragOver}`,
-                    )}
-                  >
+              return (
+                <Droppable key={status} droppableId={status}>
+                  {(provided, snapshot) => (
+                    <div
+                      ref={provided.innerRef}
+                      {...provided.droppableProps}
+                      className={cn(
+                        "group/col relative flex flex-col rounded-xl border border-border bg-card/50 transition-all",
+                        // sizing for horizontal scroll vs grid
+                        "w-[82vw] min-w-[260px] max-w-[320px] shrink-0 snap-start",
+                        "sm:w-[60vw] sm:max-w-[340px]",
+                        "md:w-[44vw] md:max-w-[360px]",
+                        "xl:w-auto xl:min-w-0 xl:max-w-none xl:shrink",
+                        snapshot.isDraggingOver &&
+                          `ring-2 ring-offset-2 ring-offset-background ${theme.dragOver}`,
+                      )}
+                    >
                     {/* Top stripe */}
                     <div
                       className={cn(
@@ -342,8 +357,14 @@ export function KanbanBoard({
               </Droppable>
             );
           })}
+          </div>
         </div>
       </DragDropContext>
+
+      {/* Mobile hint */}
+      <p className="text-center text-[11px] text-muted-foreground xl:hidden">
+        ← Geser untuk melihat kolom lain →
+      </p>
 
       <TaskModal
         open={!!editing}

@@ -31,6 +31,7 @@ import {
   taskStatusLabel,
 } from "@/lib/utils";
 import { buildWorkspaceWhatsAppReport } from "@/lib/utils/whatsapp-report";
+import { buildBoardUrl, getAppUrl } from "@/lib/utils/app-url";
 import type { Project, Task, ActivityLog } from "@/types";
 
 export const dynamic = "force-dynamic";
@@ -89,9 +90,11 @@ export default async function DashboardPage() {
 
   const isEmpty = allProjects.length === 0 && allTasks.length === 0;
 
+  const baseUrl = await getAppUrl();
   const waReport = buildWorkspaceWhatsAppReport({
     projects: allProjects,
     tasks: allTasks,
+    boardUrl: buildBoardUrl(baseUrl),
   });
 
   return (

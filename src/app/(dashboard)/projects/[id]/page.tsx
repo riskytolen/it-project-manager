@@ -37,6 +37,7 @@ import {
   taskStatusLabel,
 } from "@/lib/utils";
 import { buildProjectWhatsAppReport } from "@/lib/utils/whatsapp-report";
+import { buildBoardUrl, getAppUrl } from "@/lib/utils/app-url";
 import type {
   ActivityLog,
   FileRecord,
@@ -106,10 +107,12 @@ export default async function ProjectDetailPage({
 
   const overdue = isOverdue(proj.deadline, proj.status);
 
+  const baseUrl = await getAppUrl();
   const waReport = buildProjectWhatsAppReport({
     project: proj,
     tasks: allTasks,
     activities: ((activities ?? []) as ActivityLog[]).slice(0, 5),
+    boardUrl: buildBoardUrl(baseUrl, proj.id),
   });
 
   return (

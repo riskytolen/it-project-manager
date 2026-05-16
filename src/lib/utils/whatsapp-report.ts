@@ -75,10 +75,12 @@ export function buildProjectWhatsAppReport({
   project,
   tasks,
   activities,
+  boardUrl,
 }: {
   project: Project;
   tasks: Task[];
   activities?: ActivityLog[];
+  boardUrl?: string;
 }) {
   const stats: Record<TaskStatus, number> = {
     todo: 0,
@@ -164,6 +166,11 @@ export function buildProjectWhatsAppReport({
     });
   }
 
+  if (boardUrl) {
+    lines.push("");
+    lines.push(`👉 Buka papan tugas:\n${boardUrl}`);
+  }
+
   lines.push("");
   lines.push(divider());
   lines.push(`_Diperbarui ${timestamp()}_`);
@@ -178,10 +185,12 @@ export function buildWorkspaceWhatsAppReport({
   projects,
   tasks,
   displayName,
+  boardUrl,
 }: {
   projects: Project[];
   tasks: Task[];
   displayName?: string;
+  boardUrl?: string;
 }) {
   const activeProjects = projects.filter(
     (p) =>
@@ -259,6 +268,11 @@ export function buildWorkspaceWhatsAppReport({
         `• ${t.title} — ${format(parseISO(t.deadline!), "d MMM", { locale: idLocale })}`,
       );
     });
+  }
+
+  if (boardUrl) {
+    lines.push("");
+    lines.push(`👉 Buka papan tugas:\n${boardUrl}`);
   }
 
   lines.push("");
