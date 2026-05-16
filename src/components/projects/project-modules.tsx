@@ -74,13 +74,26 @@ export function ProjectModules({ projectId, modules, tasks }: Props) {
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-between gap-2">
-        <div className="flex items-center gap-2">
-          <FolderOpen className="h-4 w-4 text-primary" />
-          <p className="text-sm font-semibold">Modul Proyek</p>
-          <span className="rounded-full bg-secondary px-2 py-0.5 text-[10px] font-medium tabular-nums text-muted-foreground">
-            {modules.length}
+      {/* Compact stats + primary action */}
+      <div className="flex flex-wrap items-center justify-between gap-3 rounded-lg border border-border bg-muted/30 px-3 py-2.5">
+        <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs">
+          <span className="inline-flex items-center gap-1.5 font-medium">
+            <FolderOpen className="h-3.5 w-3.5 text-primary" />
+            <span className="tabular-nums">{modules.length}</span>
+            <span className="text-muted-foreground">modul</span>
           </span>
+          <span className="inline-flex items-center gap-1.5 text-muted-foreground">
+            <ListChecks className="h-3.5 w-3.5" />
+            <span className="tabular-nums">{tasks.length}</span>
+            <span>tugas</span>
+          </span>
+          {tasksWithoutModule.length > 0 && (
+            <span className="inline-flex items-center gap-1.5 text-muted-foreground">
+              <span className="h-1.5 w-1.5 rounded-full bg-amber-500" />
+              <span className="tabular-nums">{tasksWithoutModule.length}</span>
+              <span>tanpa modul</span>
+            </span>
+          )}
         </div>
         <Button size="sm" onClick={() => setEditingModule("new")}>
           <Plus className="h-4 w-4" />
@@ -145,15 +158,6 @@ export function ProjectModules({ projectId, modules, tasks }: Props) {
                 <div className="flex shrink-0 items-center gap-1">
                   <button
                     type="button"
-                    onClick={() => setCreatingTaskFor({ moduleId: m.id })}
-                    className="rounded-md p-1.5 text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
-                    aria-label="Tambah tugas ke modul ini"
-                    title="Tambah tugas"
-                  >
-                    <Plus className="h-3.5 w-3.5" />
-                  </button>
-                  <button
-                    type="button"
                     onClick={() => setEditingModule(m)}
                     className="rounded-md p-1.5 text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
                     aria-label="Edit modul"
@@ -165,7 +169,7 @@ export function ProjectModules({ projectId, modules, tasks }: Props) {
               </div>
 
               {isOpen && (
-                <div className="space-y-2 p-3 animate-slide-down">
+                <div className="space-y-3 p-3 animate-slide-down">
                   {moduleTasks.length === 0 ? (
                     <div className="rounded-md border border-dashed border-border/60 bg-background/40 p-5 text-center">
                       <ListChecks className="mx-auto mb-1.5 h-5 w-5 text-muted-foreground/70" />
@@ -174,13 +178,31 @@ export function ProjectModules({ projectId, modules, tasks }: Props) {
                         Tambahkan tugas pertama untuk modul{" "}
                         <span className="font-medium">{m.name}</span>.
                       </p>
+                      <button
+                        type="button"
+                        onClick={() => setCreatingTaskFor({ moduleId: m.id })}
+                        className="mt-3 inline-flex h-8 items-center gap-1.5 rounded-md border border-border bg-card px-3 text-xs font-medium hover:bg-accent"
+                      >
+                        <Plus className="h-3.5 w-3.5" />
+                        Tambah Tugas ke Modul Ini
+                      </button>
                     </div>
                   ) : (
-                    <TaskList
-                      projectId={projectId}
-                      tasks={moduleTasks}
-                      modules={modules}
-                    />
+                    <>
+                      <TaskList
+                        projectId={projectId}
+                        tasks={moduleTasks}
+                        modules={modules}
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setCreatingTaskFor({ moduleId: m.id })}
+                        className="inline-flex h-8 w-full items-center justify-center gap-1.5 rounded-md border border-dashed border-border text-xs font-medium text-muted-foreground transition-colors hover:border-primary/50 hover:bg-accent/50 hover:text-foreground"
+                      >
+                        <Plus className="h-3.5 w-3.5" />
+                        Tambah Tugas ke {m.name}
+                      </button>
+                    </>
                   )}
                 </div>
               )}
@@ -212,12 +234,20 @@ export function ProjectModules({ projectId, modules, tasks }: Props) {
               </div>
             </button>
             {expanded["__none__"] && (
-              <div className="p-3 animate-slide-down">
+              <div className="space-y-3 p-3 animate-slide-down">
                 <TaskList
                   projectId={projectId}
                   tasks={tasksWithoutModule}
                   modules={modules}
                 />
+                <button
+                  type="button"
+                  onClick={() => setCreatingTaskFor({ moduleId: null })}
+                  className="inline-flex h-8 w-full items-center justify-center gap-1.5 rounded-md border border-dashed border-border text-xs font-medium text-muted-foreground transition-colors hover:border-primary/50 hover:bg-accent/50 hover:text-foreground"
+                >
+                  <Plus className="h-3.5 w-3.5" />
+                  Tambah Tugas Tanpa Modul
+                </button>
               </div>
             )}
           </div>

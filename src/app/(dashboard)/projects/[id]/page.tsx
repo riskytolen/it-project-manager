@@ -244,17 +244,15 @@ export default async function ProjectDetailPage({
 
       {/* Modules + Tasks (full width) */}
       <Card>
-        <CardHeader className="flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-          <div>
-            <CardTitle className="flex items-center gap-2">
-              <ListChecks className="h-5 w-5 text-primary" />
-              Modul &amp; Tugas
-            </CardTitle>
-            <CardDescription>
-              {allModules.length} modul · {allTasks.length} tugas dalam proyek ini
-            </CardDescription>
-          </div>
-          <AddTaskButton projectId={proj.id} modules={allModules} />
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <ListChecks className="h-5 w-5 text-primary" />
+            Modul &amp; Tugas
+          </CardTitle>
+          <CardDescription>
+            Bagi proyek menjadi modul (mis. Penggajian, Kinerja) lalu tambahkan
+            tugas di dalam tiap modul.
+          </CardDescription>
         </CardHeader>
         <CardContent>
           <ProjectModules
