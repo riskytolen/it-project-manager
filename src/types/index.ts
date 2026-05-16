@@ -45,9 +45,23 @@ export interface Project {
   updated_at: string;
 }
 
+export interface Module {
+  id: string;
+  project_id: string;
+  name: string;
+  description: string | null;
+  status: ProjectStatus;
+  priority: Priority;
+  progress: number;
+  position: number;
+  created_at: string;
+  updated_at: string;
+}
+
 export interface Task {
   id: string;
   project_id: string;
+  module_id: string | null;
   title: string;
   description: string | null;
   status: TaskStatus;

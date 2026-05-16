@@ -15,6 +15,12 @@ const priorityEnum = z.enum(["low", "medium", "high", "urgent"]);
 
 const taskSchema = z.object({
   project_id: z.string().uuid(),
+  module_id: z
+    .string()
+    .uuid()
+    .optional()
+    .nullable()
+    .or(z.literal("").transform(() => null)),
   title: z.string().trim().min(1).max(200),
   description: z.string().trim().optional().nullable(),
   status: taskStatusEnum,
@@ -28,9 +34,11 @@ const taskSchema = z.object({
 });
 
 function fd(formData: FormData, defaults: Partial<{ project_id: string }> = {}) {
+  const moduleId = formData.get("module_id")?.toString();
   return {
     project_id:
       formData.get("project_id")?.toString() ?? defaults.project_id ?? "",
+    module_id: moduleId && moduleId !== "" ? moduleId : null,
     title: formData.get("title")?.toString() ?? "",
     description: formData.get("description")?.toString() || null,
     status: formData.get("status")?.toString() ?? "todo",

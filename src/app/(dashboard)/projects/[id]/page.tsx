@@ -24,10 +24,10 @@ import {
   ProjectStatusBadge,
 } from "@/components/ui/status-badge";
 import { Badge } from "@/components/ui/badge";
-import { TaskList } from "@/components/tasks/task-list";
 import { AddTaskButton } from "@/components/tasks/add-task-button";
 import { DeleteProjectButton } from "@/components/projects/delete-project-button";
 import { ProjectAttachments } from "@/components/projects/project-attachments";
+import { ProjectModules } from "@/components/projects/project-modules";
 import { WhatsAppShareButton } from "@/components/share/whatsapp-share-button";
 import {
   formatDate,
@@ -41,6 +41,7 @@ import { buildBoardUrl, getAppUrl } from "@/lib/utils/app-url";
 import type {
   ActivityLog,
   FileRecord,
+  Module,
   Project,
   Task,
   TaskChecklist,
@@ -63,6 +64,7 @@ export default async function ProjectDetailPage({
     { data: checklists },
     { data: activities },
     { data: files },
+    { data: modules },
   ] = await Promise.all([
     supabase.from("projects").select("*").eq("id", id).single(),
     supabase
@@ -85,12 +87,18 @@ export default async function ProjectDetailPage({
       .select("*")
       .eq("project_id", id)
       .order("created_at", { ascending: false }),
+    supabase
+      .from("modules")
+      .select("*")
+      .eq("project_id", id)
+      .order("position", { ascending: true }),
   ]);
 
   if (!project) notFound();
   const proj = project as Project;
   const allTasks = (tasks ?? []) as Task[];
   const allChecklists = (checklists ?? []) as TaskChecklist[];
+  const allModules = (modules ?? []) as Module[];
   const tasksWithChecklists = allTasks.map((t) => ({
     ...t,
     task_checklists: allChecklists.filter((c) => c.task_id === t.id),
@@ -241,16 +249,21 @@ export default async function ProjectDetailPage({
             <div>
               <CardTitle className="flex items-center gap-2">
                 <ListChecks className="h-5 w-5 text-primary" />
-                Tugas
+                Tugas &amp; Modul
               </CardTitle>
               <CardDescription>
-                {allTasks.length} tugas dalam proyek ini
+                {allModules.length} modul · {allTasks.length} tugas dalam proyek
+                ini
               </CardDescription>
             </div>
-            <AddTaskButton projectId={proj.id} />
+            <AddTaskButton projectId={proj.id} modules={allModules} />
           </CardHeader>
           <CardContent>
-            <TaskList projectId={proj.id} tasks={tasksWithChecklists} />
+            <ProjectModules
+              projectId={proj.id}
+              modules={allModules}
+              tasks={tasksWithChecklists}
+            />
           </CardContent>
         </Card>
 

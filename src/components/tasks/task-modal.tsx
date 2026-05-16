@@ -11,16 +11,26 @@ import {
   deleteTask,
   updateTask,
 } from "@/lib/actions/tasks";
-import type { Task } from "@/types";
+import type { Module, Task } from "@/types";
 
 interface TaskModalProps {
   open: boolean;
   onClose: () => void;
   projectId: string;
   task?: Task | null;
+  modules?: Pick<Module, "id" | "name">[];
+  /** Pre-select a module when creating a new task */
+  defaultModuleId?: string | null;
 }
 
-export function TaskModal({ open, onClose, projectId, task }: TaskModalProps) {
+export function TaskModal({
+  open,
+  onClose,
+  projectId,
+  task,
+  modules,
+  defaultModuleId,
+}: TaskModalProps) {
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
 
@@ -53,6 +63,8 @@ export function TaskModal({ open, onClose, projectId, task }: TaskModalProps) {
       }
     });
   }
+
+  const selectedModule = task?.module_id ?? defaultModuleId ?? "";
 
   return (
     <Modal
@@ -90,6 +102,27 @@ export function TaskModal({ open, onClose, projectId, task }: TaskModalProps) {
             placeholder="Detail, kriteria penerimaan, referensi..."
           />
         </div>
+
+        {modules && modules.length > 0 && (
+          <div className="space-y-1.5">
+            <Label htmlFor="module_id">Modul</Label>
+            <Select
+              id="module_id"
+              name="module_id"
+              defaultValue={selectedModule}
+            >
+              <option value="">— Tanpa Modul —</option>
+              {modules.map((m) => (
+                <option key={m.id} value={m.id}>
+                  {m.name}
+                </option>
+              ))}
+            </Select>
+            <p className="text-[11px] text-muted-foreground">
+              Kelompokkan tugas ini ke salah satu modul/bagian proyek.
+            </p>
+          </div>
+        )}
 
         <div className="grid gap-4 sm:grid-cols-2">
           <div className="space-y-1.5">

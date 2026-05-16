@@ -20,7 +20,7 @@ import {
   formatDate,
   isOverdue,
 } from "@/lib/utils";
-import type { Task, TaskChecklist } from "@/types";
+import type { Module, Task, TaskChecklist } from "@/types";
 
 type TaskWithChecklist = Task & {
   task_checklists?: TaskChecklist[];
@@ -29,9 +29,11 @@ type TaskWithChecklist = Task & {
 interface Props {
   projectId: string;
   tasks: TaskWithChecklist[];
+  /** Modules in this project; passed to TaskModal so users can change a task's module */
+  modules?: Pick<Module, "id" | "name">[];
 }
 
-export function TaskList({ projectId, tasks }: Props) {
+export function TaskList({ projectId, tasks, modules }: Props) {
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [editing, setEditing] = useState<Task | null>(null);
 
@@ -140,6 +142,7 @@ export function TaskList({ projectId, tasks }: Props) {
         onClose={() => setEditing(null)}
         projectId={projectId}
         task={editing}
+        modules={modules}
       />
     </>
   );
