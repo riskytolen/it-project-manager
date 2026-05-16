@@ -3,7 +3,6 @@ import {
   AlertTriangle,
   CheckCircle2,
   Filter,
-  FolderOpen,
   KanbanSquare,
   ListTodo,
   Loader2,
@@ -11,7 +10,6 @@ import {
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { KanbanBoard } from "@/components/board/kanban-board";
-import { ModuleOverview } from "@/components/modules/module-overview";
 import { EmptyState } from "@/components/ui/empty-state";
 import { isOverdue } from "@/lib/utils";
 import type { Module, Project, Task, TaskChecklist } from "@/types";
@@ -20,7 +18,6 @@ export const dynamic = "force-dynamic";
 
 interface SearchParams {
   project?: string;
-  module?: string;
 }
 
 export default async function BoardPage({
@@ -46,13 +43,6 @@ export default async function BoardPage({
       if (params.project && params.project !== "all") {
         q = q.eq("project_id", params.project);
       }
-      if (params.module && params.module !== "all") {
-        if (params.module === "none") {
-          q = q.is("module_id", null);
-        } else {
-          q = q.eq("module_id", params.module);
-        }
-      }
       return q;
     })(),
     supabase
@@ -61,14 +51,17 @@ export default async function BoardPage({
       .order("position", { ascending: true }),
     supabase
       .from("modules")
-      .select("*")
+      .select("id, name, project_id")
       .order("position", { ascending: true }),
   ]);
 
   const allProjects = (projects ?? []) as Pick<Project, "id" | "name">[];
   const allTasks = (taskQuery.data ?? []) as Task[];
   const allChecklists = (checklists ?? []) as TaskChecklist[];
-  const allModules = (modules ?? []) as Module[];
+  const allModules = (modules ?? []) as Pick<
+    Module,
+    "id" | "name" | "project_id"
+  >[];
 
   const totalTasks = allTasks.length;
   const doneTasks = allTasks.filter((t) => t.status === "done").length;
@@ -87,19 +80,6 @@ export default async function BoardPage({
       ? allProjects.find((p) => p.id === params.project)?.name
       : null;
 
-  // Modules available for the currently selected project filter
-  const visibleModules =
-    params.project && params.project !== "all"
-      ? allModules.filter((m) => m.project_id === params.project)
-      : allModules;
-
-  const selectedModuleName =
-    params.module && params.module !== "all" && params.module !== "none"
-      ? allModules.find((m) => m.id === params.module)?.name
-      : params.module === "none"
-        ? "Tanpa Modul"
-        : null;
-
   return (
     <div className="space-y-4 animate-fade-in">
       {/* Compact header */}
@@ -113,21 +93,18 @@ export default async function BoardPage({
               {selectedProjectName ?? "Papan Tugas"}
             </h1>
             <p className="line-clamp-1 text-xs text-muted-foreground">
-              {selectedModuleName
-                ? `Modul: ${selectedModuleName}`
-                : "Seret kartu antar kolom untuk memperbarui status"}
+              Seret kartu antar kolom untuk memperbarui status
             </p>
           </div>
         </div>
 
-        <form className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row">
-          {/* Project filter */}
+        <form className="flex w-full items-center gap-2 sm:w-auto">
           <div className="relative flex flex-1 items-center sm:flex-none">
             <Filter className="pointer-events-none absolute left-3 h-3.5 w-3.5 text-muted-foreground" />
             <select
               name="project"
               defaultValue={params.project ?? "all"}
-              className="h-9 w-full appearance-none rounded-md border border-input bg-card pl-9 pr-3 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring sm:w-48"
+              className="h-9 w-full appearance-none rounded-md border border-input bg-card pl-9 pr-3 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring sm:w-56"
             >
               <option value="all">Semua Proyek</option>
               {allProjects.map((p) => (
@@ -137,27 +114,6 @@ export default async function BoardPage({
               ))}
             </select>
           </div>
-
-          {/* Module filter */}
-          {visibleModules.length > 0 && (
-            <div className="relative flex flex-1 items-center sm:flex-none">
-              <FolderOpen className="pointer-events-none absolute left-3 h-3.5 w-3.5 text-muted-foreground" />
-              <select
-                name="module"
-                defaultValue={params.module ?? "all"}
-                className="h-9 w-full appearance-none rounded-md border border-input bg-card pl-9 pr-3 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring sm:w-44"
-              >
-                <option value="all">Semua Modul</option>
-                <option value="none">— Tanpa Modul —</option>
-                {visibleModules.map((m) => (
-                  <option key={m.id} value={m.id}>
-                    {m.name}
-                  </option>
-                ))}
-              </select>
-            </div>
-          )}
-
           <button
             type="submit"
             className="inline-flex h-9 shrink-0 items-center justify-center gap-1.5 rounded-md bg-primary px-3.5 text-xs font-medium text-primary-foreground shadow-sm hover:bg-primary/90 active:scale-[0.98]"
@@ -211,22 +167,6 @@ export default async function BoardPage({
               tone="danger"
             />
           </div>
-
-          {/* Module overview (clickable) */}
-          {visibleModules.length > 0 && (
-            <ModuleOverview
-              modules={allModules}
-              tasks={allTasks}
-              projects={allProjects}
-              selectedProjectId={params.project ?? null}
-              selectedModuleId={params.module ?? null}
-              title={
-                selectedProjectName
-                  ? `Modul ${selectedProjectName}`
-                  : "Ringkasan Modul"
-              }
-            />
-          )}
 
           <KanbanBoard
             initialTasks={allTasks}
