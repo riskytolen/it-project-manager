@@ -102,13 +102,18 @@ export default async function ModuleDetailPage({
     `👉 ${boardUrl}`,
     "",
     `━━━━━━━━━━━━━━━━━━`,
-    `_Diperbarui ${new Date().toLocaleString("id-ID", {
+    `_Diperbarui ${new Intl.DateTimeFormat("id-ID", {
+      timeZone: "Asia/Jakarta",
       day: "numeric",
       month: "short",
       year: "numeric",
       hour: "2-digit",
       minute: "2-digit",
-    })}_`,
+      hour12: false,
+    })
+      .format(new Date())
+      .replace(/\./g, ":")
+      .replace(",", "")} WIB_`,
   ].join("\n");
 
   return (

@@ -22,7 +22,19 @@ function divider() {
 }
 
 function timestamp() {
-  return format(new Date(), "d MMM yyyy, HH:mm", { locale: idLocale });
+  // Force Asia/Jakarta (WIB / UTC+7) regardless of where the server runs.
+  return new Intl.DateTimeFormat("id-ID", {
+    timeZone: "Asia/Jakarta",
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false,
+  })
+    .format(new Date())
+    .replace(/\./g, ":")
+    .replace(",", "") + " WIB";
 }
 
 // ============================================================
