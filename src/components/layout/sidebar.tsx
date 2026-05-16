@@ -116,28 +116,22 @@ export function Sidebar({ open, onClose }: SidebarProps) {
             <div className="absolute -top-6 -right-6 h-16 w-16 rounded-full bg-orange-500/10 blur-xl" />
             <div className="relative flex items-center gap-2.5">
               <div className="relative shrink-0">
-                <div className="flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-orange-500 to-orange-700 text-white text-xs font-bold shadow-md ring-2 ring-background">
+                <div className="flex h-9 w-9 items-center justify-center rounded-md bg-gradient-to-br from-orange-600 to-orange-800 text-white text-xs font-bold shadow-md ring-1 ring-orange-700/20">
                   RY
                 </div>
-                <span className="absolute -bottom-0.5 -right-0.5 flex h-3 w-3 items-center justify-center rounded-full bg-emerald-500 ring-2 ring-card">
-                  <span className="h-1.5 w-1.5 rounded-full bg-white animate-pulse" />
-                </span>
               </div>
               <div className="min-w-0 flex-1">
-                <div className="flex items-center gap-1">
-                  <p className="truncate text-xs font-bold text-foreground">
-                    Risky Yanto
-                  </p>
-                </div>
+                <p className="truncate text-xs font-bold tracking-tight text-foreground">
+                  Risky Yanto
+                </p>
                 <p className="truncate text-[10px] font-medium uppercase tracking-wider text-orange-700 dark:text-orange-400">
                   Web Developer
                 </p>
               </div>
             </div>
             <div className="relative mt-2 flex items-center justify-between gap-1 border-t border-orange-500/10 pt-2 text-[10px] text-muted-foreground">
-              <span className="inline-flex items-center gap-1">
-                <span className="text-red-500">♥</span>
-                <span>Crafted</span>
+              <span className="font-medium uppercase tracking-wider">
+                Developer
               </span>
               <span className="font-mono">© {new Date().getFullYear()}</span>
             </div>
