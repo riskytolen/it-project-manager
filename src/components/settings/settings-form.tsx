@@ -27,6 +27,7 @@ export function SettingsForm({ settings }: { settings: AppSettings | null }) {
           <Input
             id="display_name"
             name="display_name"
+            autoFormat="title"
             defaultValue={settings?.display_name ?? "IT Manager"}
             placeholder="Nama kamu"
           />

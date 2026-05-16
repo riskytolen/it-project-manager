@@ -293,6 +293,7 @@ function NoteModal({ open, onClose, note, projects }: NoteModalProps) {
             id="title"
             name="title"
             required
+            autoFormat="title"
             defaultValue={note?.title}
             placeholder="mis. Perbaiki redirect login di iOS Safari"
           />
@@ -337,6 +338,7 @@ function NoteModal({ open, onClose, note, projects }: NoteModalProps) {
             id="content"
             name="content"
             rows={8}
+            autoFormat="sentence"
             defaultValue={note?.content ?? ""}
             placeholder="Tulis catatanmu... Baris baru ala Markdown tetap dipertahankan."
           />

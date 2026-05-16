@@ -73,6 +73,7 @@ export function TaskModal({ open, onClose, projectId, task }: TaskModalProps) {
             id="title"
             name="title"
             required
+            autoFormat="title"
             defaultValue={task?.title}
             placeholder="mis. Implementasi alur autentikasi"
           />
@@ -84,6 +85,7 @@ export function TaskModal({ open, onClose, projectId, task }: TaskModalProps) {
             id="description"
             name="description"
             rows={3}
+            autoFormat="sentence"
             defaultValue={task?.description ?? ""}
             placeholder="Detail, kriteria penerimaan, referensi..."
           />
@@ -136,6 +138,7 @@ export function TaskModal({ open, onClose, projectId, task }: TaskModalProps) {
             id="notes"
             name="notes"
             rows={2}
+            autoFormat="sentence"
             defaultValue={task?.notes ?? ""}
             placeholder="Catatan implementasi opsional..."
           />

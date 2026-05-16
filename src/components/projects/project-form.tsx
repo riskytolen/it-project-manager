@@ -46,6 +46,7 @@ export function ProjectForm({ project }: { project?: Project }) {
           id="name"
           name="name"
           required
+          autoFormat="title"
           defaultValue={project?.name}
           placeholder="mis. Redesign Landing Page Perusahaan"
         />
@@ -57,6 +58,7 @@ export function ProjectForm({ project }: { project?: Project }) {
           id="description"
           name="description"
           rows={3}
+          autoFormat="sentence"
           defaultValue={project?.description ?? ""}
           placeholder="Tujuan proyek, lingkup, sasaran..."
         />
@@ -126,6 +128,7 @@ export function ProjectForm({ project }: { project?: Project }) {
           id="notes"
           name="notes"
           rows={3}
+          autoFormat="sentence"
           defaultValue={project?.notes ?? ""}
           placeholder="Catatan implementasi, tautan, referensi..."
         />
