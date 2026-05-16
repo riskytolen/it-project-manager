@@ -110,27 +110,45 @@ export function Sidebar({ open, onClose }: SidebarProps) {
         </nav>
 
         {/* Footer */}
-        <div className="border-t border-border p-4 space-y-3">
+        <div className="border-t border-border p-3 space-y-2.5">
           <div className="rounded-lg bg-gradient-to-br from-orange-600/10 to-orange-800/10 p-3 text-xs">
             <p className="font-medium text-foreground">Tetap fokus</p>
             <p className="mt-1 text-muted-foreground">
               Lacak semua proyek &amp; tugas di satu tempat.
             </p>
           </div>
-          <p className="text-center text-[10px] leading-snug text-muted-foreground/70">
-            Dibuat dengan{" "}
-            <span className="text-red-500" aria-label="cinta">
-              ♥
-            </span>{" "}
-            oleh{" "}
-            <span className="font-semibold text-foreground/80">
-              Risky Yanto
-            </span>
-            <br />
-            <span className="text-muted-foreground/60">
-              © {new Date().getFullYear()}
-            </span>
-          </p>
+
+          {/* Developer card */}
+          <div className="group relative overflow-hidden rounded-lg border border-orange-500/20 bg-gradient-to-br from-orange-500/10 via-orange-600/5 to-amber-500/10 p-3 transition-all hover:border-orange-500/40 hover:shadow-md">
+            <div className="absolute -top-6 -right-6 h-16 w-16 rounded-full bg-orange-500/10 blur-xl" />
+            <div className="relative flex items-center gap-2.5">
+              <div className="relative shrink-0">
+                <div className="flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-orange-500 to-orange-700 text-white text-xs font-bold shadow-md ring-2 ring-background">
+                  RY
+                </div>
+                <span className="absolute -bottom-0.5 -right-0.5 flex h-3 w-3 items-center justify-center rounded-full bg-emerald-500 ring-2 ring-card">
+                  <span className="h-1.5 w-1.5 rounded-full bg-white animate-pulse" />
+                </span>
+              </div>
+              <div className="min-w-0 flex-1">
+                <div className="flex items-center gap-1">
+                  <p className="truncate text-xs font-bold text-foreground">
+                    Risky Yanto
+                  </p>
+                </div>
+                <p className="truncate text-[10px] font-medium uppercase tracking-wider text-orange-700 dark:text-orange-400">
+                  Web Developer
+                </p>
+              </div>
+            </div>
+            <div className="relative mt-2 flex items-center justify-between gap-1 border-t border-orange-500/10 pt-2 text-[10px] text-muted-foreground">
+              <span className="inline-flex items-center gap-1">
+                <span className="text-red-500">♥</span>
+                <span>Crafted</span>
+              </span>
+              <span className="font-mono">© {new Date().getFullYear()}</span>
+            </div>
+          </div>
         </div>
       </aside>
     </>
