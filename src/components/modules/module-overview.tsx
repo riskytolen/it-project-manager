@@ -93,14 +93,7 @@ export function ModuleOverview({
     return s + t;
   }, 0);
 
-  const allUrl = (mid: string) => {
-    const p = new URLSearchParams();
-    if (selectedProjectId && selectedProjectId !== "all") {
-      p.set("project", selectedProjectId);
-    }
-    p.set("module", mid);
-    return `/board?${p.toString()}`;
-  };
+  const allUrl = (mid: string) => `/modules/${mid}`;
 
   return (
     <section className="space-y-3">
