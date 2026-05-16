@@ -81,6 +81,12 @@ export default async function SettingsPage() {
           <Row label="Versi" value="1.0.0" />
           <Row label="Stack" value="Next.js · TypeScript · Tailwind · Supabase" />
           <Row
+            label="Pengembang"
+            value={
+              <span className="font-semibold text-foreground">Risky Yanto</span>
+            }
+          />
+          <Row
             label="Penyimpanan"
             value={
               <a

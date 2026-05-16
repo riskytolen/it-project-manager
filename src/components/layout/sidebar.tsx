@@ -110,13 +110,27 @@ export function Sidebar({ open, onClose }: SidebarProps) {
         </nav>
 
         {/* Footer */}
-        <div className="border-t border-border p-4">
+        <div className="border-t border-border p-4 space-y-3">
           <div className="rounded-lg bg-gradient-to-br from-orange-600/10 to-orange-800/10 p-3 text-xs">
             <p className="font-medium text-foreground">Tetap fokus</p>
             <p className="mt-1 text-muted-foreground">
               Lacak semua proyek &amp; tugas di satu tempat.
             </p>
           </div>
+          <p className="text-center text-[10px] leading-snug text-muted-foreground/70">
+            Dibuat dengan{" "}
+            <span className="text-red-500" aria-label="cinta">
+              ♥
+            </span>{" "}
+            oleh{" "}
+            <span className="font-semibold text-foreground/80">
+              Risky Yanto
+            </span>
+            <br />
+            <span className="text-muted-foreground/60">
+              © {new Date().getFullYear()}
+            </span>
+          </p>
         </div>
       </aside>
     </>
