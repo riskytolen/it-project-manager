@@ -110,14 +110,7 @@ export function Sidebar({ open, onClose }: SidebarProps) {
         </nav>
 
         {/* Footer */}
-        <div className="border-t border-border p-3 space-y-2.5">
-          <div className="rounded-lg bg-gradient-to-br from-orange-600/10 to-orange-800/10 p-3 text-xs">
-            <p className="font-medium text-foreground">Tetap fokus</p>
-            <p className="mt-1 text-muted-foreground">
-              Lacak semua proyek &amp; tugas di satu tempat.
-            </p>
-          </div>
-
+        <div className="border-t border-border p-3">
           {/* Developer card */}
           <div className="group relative overflow-hidden rounded-lg border border-orange-500/20 bg-gradient-to-br from-orange-500/10 via-orange-600/5 to-amber-500/10 p-3 transition-all hover:border-orange-500/40 hover:shadow-md">
             <div className="absolute -top-6 -right-6 h-16 w-16 rounded-full bg-orange-500/10 blur-xl" />
