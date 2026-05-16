@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState, useTransition } from "react";
+import { forwardRef, useEffect, useMemo, useState, useTransition } from "react";
 import {
   DragDropContext,
   Draggable,
@@ -8,11 +8,21 @@ import {
   type DropResult,
 } from "@hello-pangea/dnd";
 import { toast } from "sonner";
-import { CalendarDays, GripVertical, Pencil, Plus } from "lucide-react";
-import { TaskModal } from "@/components/tasks/task-modal";
 import {
-  PriorityBadge,
-} from "@/components/ui/status-badge";
+  AlertCircle,
+  CalendarDays,
+  Check,
+  CircleDashed,
+  ClipboardCheck,
+  FlaskConical,
+  ListChecks,
+  Loader2,
+  MessageSquare,
+  Pencil,
+  Plus,
+  RefreshCcw,
+} from "lucide-react";
+import { TaskModal } from "@/components/tasks/task-modal";
 import {
   cn,
   formatDate,
@@ -20,7 +30,13 @@ import {
   taskStatusLabel,
 } from "@/lib/utils";
 import { updateTaskStatus } from "@/lib/actions/tasks";
-import type { Project, Task, TaskStatus } from "@/types";
+import type {
+  Priority,
+  Project,
+  Task,
+  TaskChecklist,
+  TaskStatus,
+} from "@/types";
 
 const COLUMNS: TaskStatus[] = [
   "todo",
@@ -30,36 +46,107 @@ const COLUMNS: TaskStatus[] = [
   "done",
 ];
 
-const COLUMN_COLORS: Record<TaskStatus, string> = {
-  todo: "border-slate-300 dark:border-slate-700",
-  in_progress: "border-blue-300 dark:border-blue-800",
-  testing: "border-purple-300 dark:border-purple-800",
-  revision: "border-amber-300 dark:border-amber-800",
-  done: "border-emerald-300 dark:border-emerald-800",
+interface ColumnTheme {
+  icon: typeof ListChecks;
+  /** gradient bg for header card */
+  headerBg: string;
+  /** dot/icon accent color */
+  accent: string;
+  /** thin top stripe */
+  stripe: string;
+  /** soft tint when dragging-over */
+  dragOver: string;
+  /** ring color for active state */
+  ring: string;
+}
+
+const COLUMN_THEMES: Record<TaskStatus, ColumnTheme> = {
+  todo: {
+    icon: CircleDashed,
+    headerBg: "from-slate-500/10 to-transparent",
+    accent: "text-slate-600 dark:text-slate-300 bg-slate-500/10",
+    stripe: "bg-slate-400",
+    dragOver: "ring-slate-400/40 bg-slate-500/5",
+    ring: "ring-slate-300/60",
+  },
+  in_progress: {
+    icon: Loader2,
+    headerBg: "from-sky-500/10 to-transparent",
+    accent: "text-sky-700 dark:text-sky-300 bg-sky-500/10",
+    stripe: "bg-sky-500",
+    dragOver: "ring-sky-400/50 bg-sky-500/5",
+    ring: "ring-sky-300/60",
+  },
+  testing: {
+    icon: FlaskConical,
+    headerBg: "from-violet-500/10 to-transparent",
+    accent: "text-violet-700 dark:text-violet-300 bg-violet-500/10",
+    stripe: "bg-violet-500",
+    dragOver: "ring-violet-400/50 bg-violet-500/5",
+    ring: "ring-violet-300/60",
+  },
+  revision: {
+    icon: RefreshCcw,
+    headerBg: "from-amber-500/10 to-transparent",
+    accent: "text-amber-700 dark:text-amber-300 bg-amber-500/10",
+    stripe: "bg-amber-500",
+    dragOver: "ring-amber-400/50 bg-amber-500/5",
+    ring: "ring-amber-300/60",
+  },
+  done: {
+    icon: ClipboardCheck,
+    headerBg: "from-emerald-500/10 to-transparent",
+    accent: "text-emerald-700 dark:text-emerald-300 bg-emerald-500/10",
+    stripe: "bg-emerald-500",
+    dragOver: "ring-emerald-400/50 bg-emerald-500/5",
+    ring: "ring-emerald-300/60",
+  },
 };
 
-const COLUMN_DOT: Record<TaskStatus, string> = {
-  todo: "bg-slate-400",
-  in_progress: "bg-blue-500",
-  testing: "bg-purple-500",
-  revision: "bg-amber-500",
-  done: "bg-emerald-500",
+const PRIORITY_STRIPE: Record<Priority, string> = {
+  low: "bg-slate-400",
+  medium: "bg-sky-500",
+  high: "bg-orange-500",
+  urgent: "bg-red-500",
+};
+
+const PRIORITY_LABEL_SHORT: Record<Priority, string> = {
+  low: "Rendah",
+  medium: "Sedang",
+  high: "Tinggi",
+  urgent: "Mendesak",
+};
+
+const PRIORITY_PILL: Record<Priority, string> = {
+  low:
+    "border-slate-300/60 text-slate-600 bg-slate-100 dark:border-slate-700 dark:bg-slate-800/60 dark:text-slate-300",
+  medium:
+    "border-sky-300/60 text-sky-700 bg-sky-50 dark:border-sky-900/60 dark:bg-sky-950/40 dark:text-sky-300",
+  high:
+    "border-orange-300/60 text-orange-700 bg-orange-50 dark:border-orange-900/60 dark:bg-orange-950/40 dark:text-orange-300",
+  urgent:
+    "border-red-300/60 text-red-700 bg-red-50 dark:border-red-900/60 dark:bg-red-950/40 dark:text-red-300",
 };
 
 interface Props {
   initialTasks: Task[];
+  initialChecklists?: TaskChecklist[];
   projects: Pick<Project, "id" | "name">[];
   selectedProjectId?: string;
 }
 
 export function KanbanBoard({
   initialTasks,
+  initialChecklists = [],
   projects,
   selectedProjectId,
 }: Props) {
   const [tasks, setTasks] = useState<Task[]>(initialTasks);
   const [editing, setEditing] = useState<Task | null>(null);
-  const [creating, setCreating] = useState<{ projectId: string } | null>(null);
+  const [creating, setCreating] = useState<{
+    projectId: string;
+    status?: TaskStatus;
+  } | null>(null);
   const [, startTransition] = useTransition();
 
   // Re-sync when server data changes
@@ -76,6 +163,15 @@ export function KanbanBoard({
     for (const t of tasks) out[t.status].push(t);
     return out;
   }, [tasks]);
+
+  const checklistByTask = useMemo(() => {
+    const map = new Map<string, TaskChecklist[]>();
+    for (const c of initialChecklists) {
+      if (!map.has(c.task_id)) map.set(c.task_id, []);
+      map.get(c.task_id)!.push(c);
+    }
+    return map;
+  }, [initialChecklists]);
 
   const onDragEnd = (result: DropResult) => {
     const { source, destination, draggableId } = result;
@@ -104,6 +200,8 @@ export function KanbanBoard({
       if (res?.error) {
         toast.error(res.error);
         setTasks(initialTasks);
+      } else {
+        toast.success(`Tugas dipindah ke ${taskStatusLabel[newStatus]}`);
       }
     });
   };
@@ -122,119 +220,128 @@ export function KanbanBoard({
   return (
     <>
       <DragDropContext onDragEnd={onDragEnd}>
-        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-5">
-          {COLUMNS.map((status) => (
-            <Droppable key={status} droppableId={status}>
-              {(provided, snapshot) => (
-                <div
-                  ref={provided.innerRef}
-                  {...provided.droppableProps}
-                  className={cn(
-                    "flex flex-col rounded-xl border-2 border-t-4 bg-muted/30 p-3 transition-colors",
-                    COLUMN_COLORS[status],
-                    snapshot.isDraggingOver && "bg-primary/5",
-                  )}
-                >
-                  <div className="mb-3 flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <span
-                        className={cn("h-2 w-2 rounded-full", COLUMN_DOT[status])}
-                      />
-                      <h3 className="text-xs font-semibold uppercase tracking-wide">
-                        {taskStatusLabel[status]}
-                      </h3>
-                      <span className="rounded-full bg-card px-1.5 text-[10px] font-medium tabular-nums text-muted-foreground">
-                        {grouped[status].length}
-                      </span>
-                    </div>
-                    {defaultProjectIdForCreate && (
-                      <button
-                        onClick={() =>
-                          setCreating({ projectId: defaultProjectIdForCreate })
-                        }
-                        className="rounded-md p-1 text-muted-foreground hover:bg-accent hover:text-foreground"
-                        aria-label="Tambah tugas"
-                      >
-                        <Plus className="h-3.5 w-3.5" />
-                      </button>
-                    )}
-                  </div>
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-5">
+          {COLUMNS.map((status) => {
+            const theme = COLUMN_THEMES[status];
+            const ColIcon = theme.icon;
+            const items = grouped[status];
 
-                  <div className="flex-1 space-y-2 min-h-[80px]">
-                    {grouped[status].length === 0 && (
-                      <p className="rounded-md border border-dashed border-border bg-card/50 py-4 text-center text-[11px] text-muted-foreground">
-                        Letakkan tugas di sini
-                      </p>
+            return (
+              <Droppable key={status} droppableId={status}>
+                {(provided, snapshot) => (
+                  <div
+                    ref={provided.innerRef}
+                    {...provided.droppableProps}
+                    className={cn(
+                      "group/col relative flex flex-col rounded-xl border border-border bg-card/50 transition-all",
+                      snapshot.isDraggingOver &&
+                        `ring-2 ring-offset-2 ring-offset-background ${theme.dragOver}`,
                     )}
-                    {grouped[status].map((task, index) => {
-                      const overdue = isOverdue(task.deadline, task.status);
-                      return (
+                  >
+                    {/* Top stripe */}
+                    <div
+                      className={cn(
+                        "h-1 w-full rounded-t-xl",
+                        theme.stripe,
+                      )}
+                    />
+
+                    {/* Header */}
+                    <div
+                      className={cn(
+                        "flex items-center justify-between gap-2 rounded-b-md bg-gradient-to-b px-3.5 pt-3 pb-3",
+                        theme.headerBg,
+                      )}
+                    >
+                      <div className="flex items-center gap-2">
+                        <span
+                          className={cn(
+                            "flex h-7 w-7 items-center justify-center rounded-md",
+                            theme.accent,
+                          )}
+                        >
+                          <ColIcon
+                            className={cn(
+                              "h-3.5 w-3.5",
+                              status === "in_progress" && "animate-spin-slow",
+                            )}
+                          />
+                        </span>
+                        <div className="flex flex-col leading-tight">
+                          <h3 className="text-[13px] font-semibold tracking-tight">
+                            {taskStatusLabel[status]}
+                          </h3>
+                          <span className="text-[10px] uppercase tracking-wider text-muted-foreground">
+                            {items.length} tugas
+                          </span>
+                        </div>
+                      </div>
+
+                      {defaultProjectIdForCreate && (
+                        <button
+                          onClick={() =>
+                            setCreating({
+                              projectId: defaultProjectIdForCreate,
+                              status,
+                            })
+                          }
+                          className="flex h-7 w-7 items-center justify-center rounded-md text-muted-foreground transition-all hover:bg-accent hover:text-foreground hover:scale-105 active:scale-95"
+                          aria-label="Tambah tugas"
+                          title={`Tambah tugas ke ${taskStatusLabel[status]}`}
+                        >
+                          <Plus className="h-4 w-4" />
+                        </button>
+                      )}
+                    </div>
+
+                    {/* Cards */}
+                    <div className="flex-1 space-y-2.5 px-2.5 pb-2.5 pt-1.5 min-h-[140px]">
+                      {items.length === 0 && (
+                        <div
+                          className={cn(
+                            "flex flex-col items-center justify-center gap-1 rounded-lg border-2 border-dashed border-border/60 bg-background/40 py-8 text-center transition-colors",
+                            snapshot.isDraggingOver &&
+                              "border-primary/50 bg-primary/5",
+                          )}
+                        >
+                          <p className="text-[11px] font-medium text-muted-foreground">
+                            {snapshot.isDraggingOver
+                              ? "Lepaskan di sini"
+                              : "Tidak ada tugas"}
+                          </p>
+                          <p className="text-[10px] text-muted-foreground/70">
+                            Seret kartu ke kolom ini
+                          </p>
+                        </div>
+                      )}
+
+                      {items.map((task, index) => (
                         <Draggable
                           key={task.id}
                           draggableId={task.id}
                           index={index}
                         >
                           {(prov, snap) => (
-                            <div
+                            <TaskCard
                               ref={prov.innerRef}
-                              {...prov.draggableProps}
-                              className={cn(
-                                "group rounded-lg border border-border bg-card p-3 shadow-sm transition-all",
-                                snap.isDragging &&
-                                  "rotate-1 shadow-lg ring-2 ring-primary",
-                              )}
-                            >
-                              <div className="flex items-start gap-2">
-                                <div
-                                  {...prov.dragHandleProps}
-                                  className="mt-0.5 cursor-grab text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity"
-                                >
-                                  <GripVertical className="h-3.5 w-3.5" />
-                                </div>
-                                <div className="min-w-0 flex-1">
-                                  <p className="text-sm font-medium leading-snug">
-                                    {task.title}
-                                  </p>
-                                  {projectMap.get(task.project_id) && (
-                                    <p className="mt-1 truncate text-[10px] uppercase tracking-wide text-muted-foreground">
-                                      {projectMap.get(task.project_id)}
-                                    </p>
-                                  )}
-                                  <div className="mt-2 flex flex-wrap items-center gap-1.5">
-                                    <PriorityBadge priority={task.priority} />
-                                    {task.deadline && (
-                                      <span
-                                        className={cn(
-                                          "inline-flex items-center gap-1 rounded-md border border-border bg-background px-1.5 py-0.5 text-[10px]",
-                                          overdue &&
-                                            "border-red-300 bg-red-50 text-red-700 dark:border-red-900 dark:bg-red-950 dark:text-red-300",
-                                        )}
-                                      >
-                                        <CalendarDays className="h-2.5 w-2.5" />
-                                        {formatDate(task.deadline, "d MMM")}
-                                      </span>
-                                    )}
-                                  </div>
-                                </div>
-                                <button
-                                  onClick={() => setEditing(task)}
-                                  className="rounded-md p-1 text-muted-foreground opacity-0 group-hover:opacity-100 hover:bg-accent hover:text-foreground transition-opacity"
-                                  aria-label="Edit"
-                                >
-                                  <Pencil className="h-3 w-3" />
-                                </button>
-                              </div>
-                            </div>
+                              draggableProps={prov.draggableProps}
+                              dragHandleProps={prov.dragHandleProps ?? null}
+                              task={task}
+                              isDragging={snap.isDragging}
+                              projectName={projectMap.get(task.project_id)}
+                              checklist={checklistByTask.get(task.id) ?? []}
+                              onEdit={() => setEditing(task)}
+                            />
                           )}
                         </Draggable>
-                      );
-                    })}
-                    {provided.placeholder}
+                      ))}
+                      {provided.placeholder}
+                    </div>
                   </div>
-                </div>
-              )}
-            </Droppable>
-          ))}
+                )}
+              </Droppable>
+            );
+          })}
         </div>
       </DragDropContext>
 
@@ -254,3 +361,170 @@ export function KanbanBoard({
     </>
   );
 }
+
+interface TaskCardProps {
+  task: Task;
+  isDragging: boolean;
+  projectName?: string;
+  checklist: TaskChecklist[];
+  onEdit: () => void;
+  draggableProps: React.HTMLAttributes<HTMLDivElement>;
+  dragHandleProps: React.HTMLAttributes<HTMLDivElement> | null;
+}
+
+const TaskCard = forwardRef<HTMLDivElement, TaskCardProps>(function TaskCard(
+  {
+    task,
+    isDragging,
+    projectName,
+    checklist,
+    onEdit,
+    draggableProps,
+    dragHandleProps,
+  },
+  ref,
+) {
+  const overdue = isOverdue(task.deadline, task.status);
+  const done = checklist.filter((c) => c.is_done).length;
+  const total = checklist.length;
+  const checklistPercent = total === 0 ? 0 : Math.round((done / total) * 100);
+  const stripe = PRIORITY_STRIPE[task.priority];
+
+  return (
+    <div
+      ref={ref}
+      {...draggableProps}
+      {...(dragHandleProps ?? {})}
+      onDoubleClick={onEdit}
+      className={cn(
+        "group/card relative cursor-grab overflow-hidden rounded-lg border border-border bg-card shadow-sm transition-all active:cursor-grabbing",
+        "hover:border-primary/40 hover:shadow-md",
+        isDragging &&
+          "rotate-1 shadow-2xl ring-2 ring-primary/60 scale-[1.02]",
+      )}
+    >
+      {/* Priority stripe (left edge) */}
+      <span
+        className={cn("absolute inset-y-0 left-0 w-1", stripe)}
+        aria-hidden="true"
+      />
+
+      <div className="px-3.5 py-3 pl-4">
+        {/* Top meta row */}
+        <div className="flex items-start justify-between gap-2">
+          <div className="flex flex-wrap items-center gap-1.5">
+            <span
+              className={cn(
+                "inline-flex items-center gap-1 rounded-md border px-1.5 py-0.5 text-[10px] font-medium",
+                PRIORITY_PILL[task.priority],
+              )}
+            >
+              <span className={cn("h-1.5 w-1.5 rounded-full", stripe)} />
+              {PRIORITY_LABEL_SHORT[task.priority]}
+            </span>
+            {overdue && (
+              <span className="inline-flex items-center gap-1 rounded-md border border-red-300/60 bg-red-50 px-1.5 py-0.5 text-[10px] font-medium text-red-700 dark:border-red-900/60 dark:bg-red-950/40 dark:text-red-300">
+                <AlertCircle className="h-2.5 w-2.5" />
+                Terlambat
+              </span>
+            )}
+          </div>
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              onEdit();
+            }}
+            className="rounded-md p-1 text-muted-foreground opacity-0 transition-all hover:bg-accent hover:text-foreground group-hover/card:opacity-100"
+            aria-label="Edit tugas"
+            tabIndex={-1}
+          >
+            <Pencil className="h-3 w-3" />
+          </button>
+        </div>
+
+        {/* Title */}
+        <h4
+          className={cn(
+            "mt-2 text-sm font-semibold leading-snug text-foreground",
+            task.status === "done" && "text-muted-foreground line-through",
+          )}
+        >
+          {task.title}
+        </h4>
+
+        {/* Description preview */}
+        {task.description && (
+          <p className="mt-1 line-clamp-2 text-xs text-muted-foreground/90">
+            {task.description}
+          </p>
+        )}
+
+        {/* Checklist progress */}
+        {total > 0 && (
+          <div className="mt-2.5 space-y-1">
+            <div className="flex items-center justify-between text-[10px] font-medium text-muted-foreground">
+              <span className="inline-flex items-center gap-1">
+                <ListChecks className="h-3 w-3" />
+                Checklist
+              </span>
+              <span className="tabular-nums">
+                {done}/{total}
+              </span>
+            </div>
+            <div className="h-1 overflow-hidden rounded-full bg-secondary">
+              <div
+                className={cn(
+                  "h-full rounded-full transition-all",
+                  checklistPercent === 100 ? "bg-emerald-500" : "bg-primary",
+                )}
+                style={{ width: `${checklistPercent}%` }}
+              />
+            </div>
+          </div>
+        )}
+
+        {/* Footer */}
+        <div className="mt-3 flex items-center justify-between gap-2 border-t border-border/50 pt-2.5">
+          {projectName ? (
+            <span className="inline-flex max-w-[60%] items-center gap-1 truncate rounded-md bg-secondary/80 px-1.5 py-0.5 text-[10px] font-medium text-muted-foreground">
+              <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-primary/70" />
+              <span className="truncate">{projectName}</span>
+            </span>
+          ) : (
+            <span />
+          )}
+
+          <div className="flex items-center gap-2 text-[10px] text-muted-foreground">
+            {task.notes && (
+              <span
+                title="Punya catatan"
+                className="text-muted-foreground/70"
+              >
+                <MessageSquare className="h-3 w-3" />
+              </span>
+            )}
+            {task.deadline && (
+              <span
+                className={cn(
+                  "inline-flex items-center gap-1 rounded-md px-1.5 py-0.5 font-medium",
+                  overdue
+                    ? "bg-red-100 text-red-700 dark:bg-red-950/50 dark:text-red-300"
+                    : "bg-secondary/80",
+                )}
+              >
+                <CalendarDays className="h-3 w-3" />
+                {formatDate(task.deadline, "d MMM")}
+              </span>
+            )}
+            {task.status === "done" && (
+              <span className="inline-flex items-center gap-1 rounded-md bg-emerald-500/10 px-1.5 py-0.5 font-medium text-emerald-700 dark:text-emerald-400">
+                <Check className="h-3 w-3" />
+              </span>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+});

@@ -82,6 +82,7 @@ const config: Config = {
         "slide-up": "slide-up 0.25s ease-out",
         "slide-down": "slide-down 0.2s ease-out",
         shimmer: "shimmer 2s infinite",
+        "spin-slow": "spin 3s linear infinite",
       },
     },
   },
