@@ -64,12 +64,20 @@
     height: 100%;
   }
 
+  html {
+    /* Avoid iOS auto text-size inflation in landscape */
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+  }
+
   body {
     background-color: hsl(var(--background));
     color: hsl(var(--foreground));
     font-feature-settings: "rlig" 1, "calt" 1;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    /* Prevent stray overflow from edge-to-edge containers on mobile */
+    overflow-x: hidden;
   }
 }
 
