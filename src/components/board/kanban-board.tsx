@@ -425,7 +425,7 @@ export function KanbanBoard({
           <div className="animate-fade-in">{renderColumn(mobileTab, true)}</div>
 
           <p className="text-center text-[11px] text-muted-foreground">
-            💡 Tap kartu 2x atau ikon pensil untuk mengubah status tugas
+            Tap kartu untuk membuka detail tugas
           </p>
         </div>
 
@@ -505,10 +505,19 @@ const TaskCard = forwardRef<HTMLDivElement, TaskCardProps>(function TaskCard(
       ref={ref}
       {...draggableProps}
       {...(dragHandleProps ?? {})}
-      onDoubleClick={onEdit}
+      onClick={onEdit}
+      role="button"
+      tabIndex={0}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          onEdit();
+        }
+      }}
       className={cn(
-        "group/card relative cursor-grab rounded-lg border border-border bg-card p-3.5 shadow-[0_1px_0_0_rgb(0_0_0_/_0.02)] transition-all active:cursor-grabbing",
+        "group/card relative cursor-pointer rounded-lg border border-border bg-card p-3.5 shadow-[0_1px_0_0_rgb(0_0_0_/_0.02)] transition-all active:cursor-grabbing",
         "hover:border-foreground/15 hover:shadow-md",
+        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background",
         overdue && "border-red-200 dark:border-red-900/60",
         isDone && "opacity-75",
         isDragging &&
