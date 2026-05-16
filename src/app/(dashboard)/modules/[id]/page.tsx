@@ -50,7 +50,6 @@ export default async function ModuleDetailPage({
     { data: project },
     { data: tasks },
     { data: checklists },
-    { data: siblingModules },
   ] = await Promise.all([
     supabase
       .from("projects")
@@ -66,11 +65,6 @@ export default async function ModuleDetailPage({
       .from("task_checklists")
       .select("*")
       .order("position", { ascending: true }),
-    supabase
-      .from("modules")
-      .select("id, name, project_id, status, progress")
-      .eq("project_id", mod.project_id)
-      .order("position", { ascending: true }),
   ]);
 
   const proj = project as
@@ -78,10 +72,6 @@ export default async function ModuleDetailPage({
     | null;
   const moduleTasks = (tasks ?? []) as Task[];
   const allChecklists = (checklists ?? []) as TaskChecklist[];
-  const allSiblings = (siblingModules ?? []) as Pick<
-    Module,
-    "id" | "name" | "project_id" | "status" | "progress"
-  >[];
 
   const totalTasks = moduleTasks.length;
   const doneTasks = moduleTasks.filter((t) => t.status === "done").length;
@@ -219,39 +209,6 @@ export default async function ModuleDetailPage({
           tone="danger"
         />
       </div>
-
-      {/* Sibling modules nav */}
-      {allSiblings.length > 1 && (
-        <div className="overflow-hidden rounded-lg border border-border bg-card">
-          <div className="border-b border-border bg-muted/20 px-3 py-2">
-            <p className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
-              Modul lain di proyek ini
-            </p>
-          </div>
-          <div className="-mx-px flex gap-2 overflow-x-auto p-2 scrollbar-thin">
-            {allSiblings.map((s) => {
-              const active = s.id === mod.id;
-              return (
-                <Link
-                  key={s.id}
-                  href={`/modules/${s.id}`}
-                  className={
-                    "shrink-0 rounded-md border px-3 py-1.5 text-xs font-medium transition-colors " +
-                    (active
-                      ? "border-primary/60 bg-primary/10 text-primary"
-                      : "border-border bg-card hover:bg-accent")
-                  }
-                >
-                  {s.name}{" "}
-                  <span className="ml-1 text-[10px] tabular-nums text-muted-foreground">
-                    {s.progress}%
-                  </span>
-                </Link>
-              );
-            })}
-          </div>
-        </div>
-      )}
 
       {/* Kanban scoped to this module */}
       <div className="rounded-xl border border-border bg-card p-3 sm:p-4">
