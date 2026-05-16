@@ -111,31 +111,13 @@ export function Sidebar({ open, onClose }: SidebarProps) {
 
         {/* Footer */}
         <div className="border-t border-border p-3">
-          {/* Developer card */}
-          <div className="group relative overflow-hidden rounded-lg border border-orange-500/20 bg-gradient-to-br from-orange-500/10 via-orange-600/5 to-amber-500/10 p-3 transition-all hover:border-orange-500/40 hover:shadow-md">
-            <div className="absolute -top-6 -right-6 h-16 w-16 rounded-full bg-orange-500/10 blur-xl" />
-            <div className="relative flex items-center gap-2.5">
-              <div className="relative shrink-0">
-                <div className="flex h-9 w-9 items-center justify-center rounded-md bg-gradient-to-br from-orange-600 to-orange-800 text-white text-xs font-bold shadow-md ring-1 ring-orange-700/20">
-                  RY
-                </div>
-              </div>
-              <div className="min-w-0 flex-1">
-                <p className="truncate text-xs font-bold tracking-tight text-foreground">
-                  Risky Yanto
-                </p>
-                <p className="truncate text-[10px] font-medium uppercase tracking-wider text-orange-700 dark:text-orange-400">
-                  Web Developer
-                </p>
-              </div>
-            </div>
-            <div className="relative mt-2 flex items-center justify-between gap-1 border-t border-orange-500/10 pt-2 text-[10px] text-muted-foreground">
-              <span className="font-medium uppercase tracking-wider">
-                Developer
-              </span>
-              <span className="font-mono">© {new Date().getFullYear()}</span>
-            </div>
-          </div>
+          <p className="text-center text-[10px] leading-snug text-muted-foreground/70">
+            <span className="font-medium text-foreground/70">Risky Yanto</span>
+            <br />
+            <span className="text-muted-foreground/50">
+              © {new Date().getFullYear()}
+            </span>
+          </p>
         </div>
       </aside>
     </>
