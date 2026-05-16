@@ -108,7 +108,7 @@ const COLUMN_THEMES: Record<TaskStatus, ColumnTheme> = {
   },
 };
 
-const PRIORITY_STRIPE: Record<Priority, string> = {
+const PRIORITY_DOT: Record<Priority, string> = {
   low: "bg-slate-400",
   medium: "bg-sky-500",
   high: "bg-orange-500",
@@ -122,15 +122,11 @@ const PRIORITY_LABEL_SHORT: Record<Priority, string> = {
   urgent: "Mendesak",
 };
 
-const PRIORITY_PILL: Record<Priority, string> = {
-  low:
-    "border-slate-300/60 text-slate-600 bg-slate-100 dark:border-slate-700 dark:bg-slate-800/60 dark:text-slate-300",
-  medium:
-    "border-sky-300/60 text-sky-700 bg-sky-50 dark:border-sky-900/60 dark:bg-sky-950/40 dark:text-sky-300",
-  high:
-    "border-orange-300/60 text-orange-700 bg-orange-50 dark:border-orange-900/60 dark:bg-orange-950/40 dark:text-orange-300",
-  urgent:
-    "border-red-300/60 text-red-700 bg-red-50 dark:border-red-900/60 dark:bg-red-950/40 dark:text-red-300",
+const PRIORITY_TEXT: Record<Priority, string> = {
+  low: "text-slate-600 dark:text-slate-400",
+  medium: "text-sky-600 dark:text-sky-400",
+  high: "text-orange-600 dark:text-orange-400",
+  urgent: "text-red-600 dark:text-red-400",
 };
 
 interface Props {
@@ -500,7 +496,9 @@ const TaskCard = forwardRef<HTMLDivElement, TaskCardProps>(function TaskCard(
   const done = checklist.filter((c) => c.is_done).length;
   const total = checklist.length;
   const checklistPercent = total === 0 ? 0 : Math.round((done / total) * 100);
-  const stripe = PRIORITY_STRIPE[task.priority];
+  const dot = PRIORITY_DOT[task.priority];
+  const priorityText = PRIORITY_TEXT[task.priority];
+  const isDone = task.status === "done";
 
   return (
     <div
@@ -509,126 +507,121 @@ const TaskCard = forwardRef<HTMLDivElement, TaskCardProps>(function TaskCard(
       {...(dragHandleProps ?? {})}
       onDoubleClick={onEdit}
       className={cn(
-        "group/card relative cursor-grab overflow-hidden rounded-lg border border-border bg-card shadow-sm transition-all active:cursor-grabbing",
-        "hover:border-primary/40 hover:shadow-md",
+        "group/card relative cursor-grab rounded-lg border border-border bg-card p-3.5 shadow-[0_1px_0_0_rgb(0_0_0_/_0.02)] transition-all active:cursor-grabbing",
+        "hover:border-foreground/15 hover:shadow-md",
+        overdue && "border-red-200 dark:border-red-900/60",
+        isDone && "opacity-75",
         isDragging &&
-          "rotate-1 shadow-2xl ring-2 ring-primary/60 scale-[1.02]",
+          "rotate-1 shadow-xl ring-2 ring-primary/40 border-primary/40 scale-[1.02]",
       )}
     >
-      <span
-        className={cn("absolute inset-y-0 left-0 w-1", stripe)}
-        aria-hidden="true"
-      />
+      {/* Header: priority + meta + edit */}
+      <div className="flex items-start justify-between gap-2">
+        <div className="flex min-w-0 flex-wrap items-center gap-x-2 gap-y-1">
+          <span
+            className={cn(
+              "inline-flex items-center gap-1.5 text-[10px] font-medium uppercase tracking-wider",
+              priorityText,
+            )}
+          >
+            <span className={cn("h-1.5 w-1.5 rounded-full", dot)} />
+            {PRIORITY_LABEL_SHORT[task.priority]}
+          </span>
+          {overdue && (
+            <span className="inline-flex items-center gap-1 text-[10px] font-medium uppercase tracking-wider text-red-600 dark:text-red-400">
+              <AlertCircle className="h-2.5 w-2.5" />
+              Terlambat
+            </span>
+          )}
+        </div>
+        <button
+          type="button"
+          onClick={(e) => {
+            e.stopPropagation();
+            onEdit();
+          }}
+          className="-mt-1 -mr-1 rounded-md p-1 text-muted-foreground transition-all hover:bg-accent hover:text-foreground md:opacity-0 md:group-hover/card:opacity-100"
+          aria-label="Edit tugas"
+          tabIndex={-1}
+        >
+          <Pencil className="h-3.5 w-3.5" />
+        </button>
+      </div>
 
-      <div className="px-3.5 py-3 pl-4">
-        <div className="flex items-start justify-between gap-2">
-          <div className="flex flex-wrap items-center gap-1.5">
+      {/* Title */}
+      <h4
+        className={cn(
+          "mt-1.5 text-sm font-semibold leading-snug tracking-tight text-foreground",
+          isDone && "text-muted-foreground line-through decoration-1",
+        )}
+      >
+        {task.title}
+      </h4>
+
+      {/* Description preview */}
+      {task.description && (
+        <p className="mt-1 line-clamp-2 text-xs leading-relaxed text-muted-foreground">
+          {task.description}
+        </p>
+      )}
+
+      {/* Checklist progress */}
+      {total > 0 && (
+        <div className="mt-3 space-y-1.5">
+          <div className="flex items-center justify-between text-[10px] font-medium text-muted-foreground">
+            <span className="inline-flex items-center gap-1">
+              <ListChecks className="h-3 w-3" />
+              {done} dari {total} selesai
+            </span>
+            <span className="tabular-nums">{checklistPercent}%</span>
+          </div>
+          <div className="h-1 overflow-hidden rounded-full bg-muted">
+            <div
+              className={cn(
+                "h-full rounded-full transition-all duration-500",
+                checklistPercent === 100
+                  ? "bg-emerald-500"
+                  : "bg-foreground/50",
+              )}
+              style={{ width: `${checklistPercent}%` }}
+            />
+          </div>
+        </div>
+      )}
+
+      {/* Footer: project + meta */}
+      <div className="mt-3 flex items-center justify-between gap-2 text-[11px] text-muted-foreground">
+        {projectName ? (
+          <span className="inline-flex max-w-[60%] items-center gap-1.5 truncate">
+            <span className="h-1 w-1 shrink-0 rounded-full bg-muted-foreground/50" />
+            <span className="truncate font-medium">{projectName}</span>
+          </span>
+        ) : (
+          <span />
+        )}
+
+        <div className="flex shrink-0 items-center gap-2.5">
+          {task.notes && (
+            <span title="Punya catatan" className="text-muted-foreground/60">
+              <MessageSquare className="h-3 w-3" />
+            </span>
+          )}
+          {task.deadline && (
             <span
               className={cn(
-                "inline-flex items-center gap-1 rounded-md border px-1.5 py-0.5 text-[10px] font-medium",
-                PRIORITY_PILL[task.priority],
+                "inline-flex items-center gap-1 font-medium tabular-nums",
+                overdue && "text-red-600 dark:text-red-400",
               )}
             >
-              <span className={cn("h-1.5 w-1.5 rounded-full", stripe)} />
-              {PRIORITY_LABEL_SHORT[task.priority]}
+              <CalendarDays className="h-3 w-3" />
+              {formatDate(task.deadline, "d MMM")}
             </span>
-            {overdue && (
-              <span className="inline-flex items-center gap-1 rounded-md border border-red-300/60 bg-red-50 px-1.5 py-0.5 text-[10px] font-medium text-red-700 dark:border-red-900/60 dark:bg-red-950/40 dark:text-red-300">
-                <AlertCircle className="h-2.5 w-2.5" />
-                Terlambat
-              </span>
-            )}
-          </div>
-          <button
-            type="button"
-            onClick={(e) => {
-              e.stopPropagation();
-              onEdit();
-            }}
-            className="rounded-md p-1 text-muted-foreground transition-all hover:bg-accent hover:text-foreground md:opacity-0 md:group-hover/card:opacity-100"
-            aria-label="Edit tugas"
-            tabIndex={-1}
-          >
-            <Pencil className="h-3 w-3" />
-          </button>
-        </div>
-
-        <h4
-          className={cn(
-            "mt-2 text-sm font-semibold leading-snug text-foreground",
-            task.status === "done" && "text-muted-foreground line-through",
           )}
-        >
-          {task.title}
-        </h4>
-
-        {task.description && (
-          <p className="mt-1 line-clamp-2 text-xs text-muted-foreground/90">
-            {task.description}
-          </p>
-        )}
-
-        {total > 0 && (
-          <div className="mt-2.5 space-y-1">
-            <div className="flex items-center justify-between text-[10px] font-medium text-muted-foreground">
-              <span className="inline-flex items-center gap-1">
-                <ListChecks className="h-3 w-3" />
-                Checklist
-              </span>
-              <span className="tabular-nums">
-                {done}/{total}
-              </span>
-            </div>
-            <div className="h-1 overflow-hidden rounded-full bg-secondary">
-              <div
-                className={cn(
-                  "h-full rounded-full transition-all",
-                  checklistPercent === 100 ? "bg-emerald-500" : "bg-primary",
-                )}
-                style={{ width: `${checklistPercent}%` }}
-              />
-            </div>
-          </div>
-        )}
-
-        <div className="mt-3 flex items-center justify-between gap-2 border-t border-border/50 pt-2.5">
-          {projectName ? (
-            <span className="inline-flex max-w-[60%] items-center gap-1 truncate rounded-md bg-secondary/80 px-1.5 py-0.5 text-[10px] font-medium text-muted-foreground">
-              <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-primary/70" />
-              <span className="truncate">{projectName}</span>
+          {isDone && (
+            <span className="inline-flex h-4 w-4 items-center justify-center rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400">
+              <Check className="h-2.5 w-2.5" strokeWidth={3} />
             </span>
-          ) : (
-            <span />
           )}
-
-          <div className="flex items-center gap-2 text-[10px] text-muted-foreground">
-            {task.notes && (
-              <span
-                title="Punya catatan"
-                className="text-muted-foreground/70"
-              >
-                <MessageSquare className="h-3 w-3" />
-              </span>
-            )}
-            {task.deadline && (
-              <span
-                className={cn(
-                  "inline-flex items-center gap-1 rounded-md px-1.5 py-0.5 font-medium",
-                  overdue
-                    ? "bg-red-100 text-red-700 dark:bg-red-950/50 dark:text-red-300"
-                    : "bg-secondary/80",
-                )}
-              >
-                <CalendarDays className="h-3 w-3" />
-                {formatDate(task.deadline, "d MMM")}
-              </span>
-            )}
-            {task.status === "done" && (
-              <span className="inline-flex items-center gap-1 rounded-md bg-emerald-500/10 px-1.5 py-0.5 font-medium text-emerald-700 dark:text-emerald-400">
-                <Check className="h-3 w-3" />
-              </span>
-            )}
-          </div>
         </div>
       </div>
     </div>
