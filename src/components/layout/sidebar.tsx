@@ -108,17 +108,6 @@ export function Sidebar({ open, onClose }: SidebarProps) {
             );
           })}
         </nav>
-
-        {/* Footer */}
-        <div className="border-t border-border p-3">
-          <p className="text-center text-[10px] leading-snug text-muted-foreground/70">
-            <span className="font-medium text-foreground/70">Risky Yanto</span>
-            <br />
-            <span className="text-muted-foreground/50">
-              © {new Date().getFullYear()}
-            </span>
-          </p>
-        </div>
       </aside>
     </>
   );
