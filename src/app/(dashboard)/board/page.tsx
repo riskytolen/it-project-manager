@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { KanbanBoard } from "@/components/board/kanban-board";
+import { ModuleOverview } from "@/components/modules/module-overview";
 import { EmptyState } from "@/components/ui/empty-state";
 import { isOverdue } from "@/lib/utils";
 import type { Module, Project, Task, TaskChecklist } from "@/types";
@@ -60,17 +61,14 @@ export default async function BoardPage({
       .order("position", { ascending: true }),
     supabase
       .from("modules")
-      .select("id, name, project_id")
+      .select("*")
       .order("position", { ascending: true }),
   ]);
 
   const allProjects = (projects ?? []) as Pick<Project, "id" | "name">[];
   const allTasks = (taskQuery.data ?? []) as Task[];
   const allChecklists = (checklists ?? []) as TaskChecklist[];
-  const allModules = (modules ?? []) as Pick<
-    Module,
-    "id" | "name" | "project_id"
-  >[];
+  const allModules = (modules ?? []) as Module[];
 
   const totalTasks = allTasks.length;
   const doneTasks = allTasks.filter((t) => t.status === "done").length;
@@ -213,6 +211,22 @@ export default async function BoardPage({
               tone="danger"
             />
           </div>
+
+          {/* Module overview (clickable) */}
+          {visibleModules.length > 0 && (
+            <ModuleOverview
+              modules={allModules}
+              tasks={allTasks}
+              projects={allProjects}
+              selectedProjectId={params.project ?? null}
+              selectedModuleId={params.module ?? null}
+              title={
+                selectedProjectName
+                  ? `Modul ${selectedProjectName}`
+                  : "Ringkasan Modul"
+              }
+            />
+          )}
 
           <KanbanBoard
             initialTasks={allTasks}

@@ -242,106 +242,104 @@ export default async function ProjectDetailPage({
         ))}
       </div>
 
-      {/* Tasks + Sidebar grid */}
+      {/* Modules + Tasks (full width) */}
+      <Card>
+        <CardHeader className="flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+          <div>
+            <CardTitle className="flex items-center gap-2">
+              <ListChecks className="h-5 w-5 text-primary" />
+              Modul &amp; Tugas
+            </CardTitle>
+            <CardDescription>
+              {allModules.length} modul · {allTasks.length} tugas dalam proyek ini
+            </CardDescription>
+          </div>
+          <AddTaskButton projectId={proj.id} modules={allModules} />
+        </CardHeader>
+        <CardContent>
+          <ProjectModules
+            projectId={proj.id}
+            modules={allModules}
+            tasks={tasksWithChecklists}
+          />
+        </CardContent>
+      </Card>
+
+      {/* Sidebar grid: notes / attachments / timeline */}
       <div className="grid gap-4 lg:grid-cols-3">
-        <Card className="lg:col-span-2">
-          <CardHeader className="flex-row items-center justify-between">
-            <div>
-              <CardTitle className="flex items-center gap-2">
-                <ListChecks className="h-5 w-5 text-primary" />
-                Tugas &amp; Modul
+        {proj.notes && (
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2 text-base">
+                <StickyNote className="h-4 w-4 text-primary" />
+                Catatan
               </CardTitle>
-              <CardDescription>
-                {allModules.length} modul · {allTasks.length} tugas dalam proyek
-                ini
-              </CardDescription>
-            </div>
-            <AddTaskButton projectId={proj.id} modules={allModules} />
+            </CardHeader>
+            <CardContent>
+              <p className="whitespace-pre-wrap text-sm text-muted-foreground">
+                {proj.notes}
+              </p>
+            </CardContent>
+          </Card>
+        )}
+
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-base">
+              <FileText className="h-4 w-4 text-primary" />
+              Lampiran
+            </CardTitle>
+            <CardDescription>
+              Berkas yang terhubung dengan proyek ini
+            </CardDescription>
           </CardHeader>
           <CardContent>
-            <ProjectModules
+            <ProjectAttachments
               projectId={proj.id}
-              modules={allModules}
-              tasks={tasksWithChecklists}
+              files={(files ?? []) as FileRecord[]}
             />
           </CardContent>
         </Card>
 
-        <div className="space-y-4">
-          {proj.notes && (
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2 text-base">
-                  <StickyNote className="h-4 w-4 text-primary" />
-                  Catatan
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="whitespace-pre-wrap text-sm text-muted-foreground">
-                  {proj.notes}
-                </p>
-              </CardContent>
-            </Card>
-          )}
-
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-base">
-                <FileText className="h-4 w-4 text-primary" />
-                Lampiran
-              </CardTitle>
-              <CardDescription>
-                Berkas yang terhubung dengan proyek ini
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <ProjectAttachments
-                projectId={proj.id}
-                files={(files ?? []) as FileRecord[]}
-              />
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-base">
-                <Clock className="h-4 w-4 text-primary" />
-                Linimasa
-              </CardTitle>
-              <CardDescription>Aktivitas tugas terbaru</CardDescription>
-            </CardHeader>
-            <CardContent>
-              {(() => {
-                const projectTaskIds = new Set(allTasks.map((t) => t.id));
-                const filtered = (activities ?? []).filter(
-                  (a: ActivityLog) =>
-                    a.entity_id && projectTaskIds.has(a.entity_id),
-                ) as ActivityLog[];
-                if (filtered.length === 0) {
-                  return (
-                    <p className="py-4 text-center text-xs text-muted-foreground">
-                      Belum ada aktivitas.
-                    </p>
-                  );
-                }
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-base">
+              <Clock className="h-4 w-4 text-primary" />
+              Linimasa
+            </CardTitle>
+            <CardDescription>Aktivitas tugas terbaru</CardDescription>
+          </CardHeader>
+          <CardContent>
+            {(() => {
+              const projectTaskIds = new Set(allTasks.map((t) => t.id));
+              const filtered = (activities ?? []).filter(
+                (a: ActivityLog) =>
+                  a.entity_id && projectTaskIds.has(a.entity_id),
+              ) as ActivityLog[];
+              if (filtered.length === 0) {
                 return (
-                  <ol className="relative space-y-3">
-                    <span className="absolute left-1.5 top-2 bottom-2 w-px bg-border" />
-                    {filtered.slice(0, 8).map((a) => (
-                      <li key={a.id} className="relative pl-5">
-                        <span className="absolute left-0 top-1.5 h-3 w-3 rounded-full border-2 border-background bg-primary" />
-                        <p className="text-xs font-medium">{a.description}</p>
-                        <p className="text-[11px] text-muted-foreground">
-                          {formatDateRelative(a.created_at)}
-                        </p>
-                      </li>
-                    ))}
-                  </ol>
+                  <p className="py-4 text-center text-xs text-muted-foreground">
+                    Belum ada aktivitas.
+                  </p>
                 );
-              })()}
-            </CardContent>
-          </Card>
-        </div>
+              }
+              return (
+                <ol className="relative space-y-3">
+                  <span className="absolute left-1.5 top-2 bottom-2 w-px bg-border" />
+                  {filtered.slice(0, 8).map((a) => (
+                    <li key={a.id} className="relative pl-5">
+                      <span className="absolute left-0 top-1.5 h-3 w-3 rounded-full border-2 border-background bg-primary" />
+                      <p className="text-xs font-medium">{a.description}</p>
+                      <p className="text-[11px] text-muted-foreground">
+                        {formatDateRelative(a.created_at)}
+                      </p>
+                    </li>
+                  ))}
+                </ol>
+              );
+            })()}
+          </CardContent>
+        </Card>
       </div>
     </div>
   );
